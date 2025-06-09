@@ -2,16 +2,32 @@
 import { Button } from "@/components/ui/button";
 import { FileText, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleGetStarted = () => {
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
+    }
+  };
+
+  const handleSignIn = () => {
+    navigate('/auth');
+  };
 
   return (
     <header className="relative z-50 backdrop-blur-md bg-white/80 border-b border-white/20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/')}>
             <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg">
               <FileText className="h-6 w-6 text-white" />
             </div>
@@ -31,11 +47,16 @@ export const Header = () => {
             <a href="#about" className="text-slate-600 hover:text-slate-900 transition-colors duration-200">
               About
             </a>
-            <Button variant="ghost" className="text-slate-600 hover:text-slate-900">
-              Sign In
-            </Button>
-            <Button className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg">
-              Get Started
+            {!user && (
+              <Button variant="ghost" className="text-slate-600 hover:text-slate-900" onClick={handleSignIn}>
+                Sign In
+              </Button>
+            )}
+            <Button 
+              className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg"
+              onClick={handleGetStarted}
+            >
+              {user ? 'Dashboard' : 'Get Started'}
             </Button>
           </nav>
 
@@ -62,11 +83,16 @@ export const Header = () => {
                 About
               </a>
               <div className="pt-4 space-y-2">
-                <Button variant="ghost" className="w-full justify-start">
-                  Sign In
-                </Button>
-                <Button className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white">
-                  Get Started
+                {!user && (
+                  <Button variant="ghost" className="w-full justify-start" onClick={handleSignIn}>
+                    Sign In
+                  </Button>
+                )}
+                <Button 
+                  className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white"
+                  onClick={handleGetStarted}
+                >
+                  {user ? 'Dashboard' : 'Get Started'}
                 </Button>
               </div>
             </nav>

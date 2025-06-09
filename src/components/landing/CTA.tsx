@@ -1,8 +1,21 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 export const CTA = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleGetStarted = () => {
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
+    }
+  };
+
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Background Elements */}
@@ -41,8 +54,9 @@ export const CTA = () => {
           <Button 
             size="lg" 
             className="bg-white text-blue-600 hover:bg-blue-50 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 px-10 py-6 text-lg font-semibold"
+            onClick={handleGetStarted}
           >
-            Start Your Free Trial
+            {user ? 'Go to Dashboard' : 'Start Your Free Trial'}
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
 
