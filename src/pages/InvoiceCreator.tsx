@@ -1,17 +1,19 @@
-
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Download, Save } from 'lucide-react';
+import { ArrowLeft, Download, Save, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Invoice } from '@/types/invoice';
 import { InvoiceForm } from '@/components/invoice/InvoiceForm';
 import { InvoicePreview } from '@/components/invoice/InvoicePreview';
+import { PDFService } from '@/services/pdfService';
 
 const InvoiceCreator = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const [invoice, setInvoice] = useState<Invoice>({
     invoiceNumber: `INV-${Date.now()}`,
@@ -36,12 +38,51 @@ const InvoiceCreator = () => {
     });
   };
 
-  const handleDownload = () => {
-    // TODO: Implement PDF generation
-    toast({
-      title: "PDF wird generiert",
-      description: "Der Download startet in Kürze."
-    });
+  const handleDownloadPDF = async () => {
+    if (!previewRef.current) {
+      toast({
+        title: "Fehler",
+        description: "Vorschau konnte nicht gefunden werden.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGeneratingPDF(true);
+    try {
+      await PDFService.generateInvoicePDF(invoice, previewRef.current);
+      toast({
+        title: "PDF erfolgreich erstellt",
+        description: "Die Rechnung wurde als PDF heruntergeladen."
+      });
+    } catch (error) {
+      toast({
+        title: "PDF-Fehler",
+        description: "Die PDF konnte nicht erstellt werden.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
+  const handleDownloadAdvancedPDF = async () => {
+    setIsGeneratingPDF(true);
+    try {
+      await PDFService.generateAdvancedInvoicePDF(invoice);
+      toast({
+        title: "PDF erfolgreich erstellt",
+        description: "Die Rechnung wurde als PDF heruntergeladen."
+      });
+    } catch (error) {
+      toast({
+        title: "PDF-Fehler",
+        description: "Die PDF konnte nicht erstellt werden.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   return (
@@ -68,9 +109,22 @@ const InvoiceCreator = () => {
                 <Save className="h-4 w-4 mr-2" />
                 Speichern
               </Button>
-              <Button size="sm" onClick={handleDownload}>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleDownloadPDF}
+                disabled={isGeneratingPDF}
+              >
                 <Download className="h-4 w-4 mr-2" />
-                PDF
+                {isGeneratingPDF ? 'Generiere...' : 'PDF (Vorschau)'}
+              </Button>
+              <Button 
+                size="sm" 
+                onClick={handleDownloadAdvancedPDF}
+                disabled={isGeneratingPDF}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                {isGeneratingPDF ? 'Generiere...' : 'PDF (Formatiert)'}
               </Button>
             </div>
           </div>
@@ -100,7 +154,9 @@ const InvoiceCreator = () => {
               </CardHeader>
               <CardContent className="p-0">
                 <div className="max-h-[80vh] overflow-y-auto p-6">
-                  <InvoicePreview invoice={invoice} />
+                  <div ref={previewRef}>
+                    <InvoicePreview invoice={invoice} />
+                  </div>
                 </div>
               </CardContent>
             </Card>
