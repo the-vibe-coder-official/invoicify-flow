@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -65,6 +64,10 @@ const Dashboard = () => {
 
   const handleCreateInvoice = () => {
     navigate('/invoice/create');
+  };
+
+  const handleManageCustomers = () => {
+    navigate('/customers');
   };
 
   if (loading) {
@@ -215,7 +218,11 @@ const Dashboard = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={handleManageCustomers}
+              >
                 Kunden anzeigen
               </Button>
             </CardContent>
