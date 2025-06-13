@@ -1,10 +1,9 @@
-
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Users, LogOut, User } from 'lucide-react';
+import { FileText, Users, LogOut, User, CreditCard } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
@@ -71,6 +70,10 @@ const Dashboard = () => {
 
   const handleManageCustomers = () => {
     navigate('/customers');
+  };
+
+  const handleManageSubscription = () => {
+    navigate('/subscription');
   };
 
   if (loading) {
@@ -158,6 +161,25 @@ const Dashboard = () => {
                   onClick={handleCreateInvoice}
                 >
                   Rechnung erstellen
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+              <CardHeader>
+                <CardTitle>Abonnement verwalten</CardTitle>
+                <CardDescription>
+                  Verwalten Sie Ihren Plan und Ihre Rechnungslimits
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={handleManageSubscription}
+                >
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  Abonnement anzeigen
                 </Button>
               </CardContent>
             </Card>

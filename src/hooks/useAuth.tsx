@@ -27,6 +27,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+        
+        // Check subscription when user logs in
+        if (event === 'SIGNED_IN' && session?.user) {
+          console.log('User signed in, checking subscription...');
+        }
       }
     );
 

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +11,7 @@ import InvoiceCreator from "./pages/InvoiceCreator";
 import Customers from "./pages/Customers";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
+import Subscription from "./pages/Subscription";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +30,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/subscription" 
+              element={
+                <ProtectedRoute>
+                  <Subscription />
                 </ProtectedRoute>
               } 
             />
