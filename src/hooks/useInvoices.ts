@@ -57,13 +57,19 @@ export const useInvoices = () => {
         return;
       }
 
-      setInvoices(data || []);
+      // Type the data properly to match our InvoiceData interface
+      const typedInvoices: InvoiceData[] = (data || []).map(invoice => ({
+        ...invoice,
+        status: invoice.status as 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled'
+      }));
+
+      setInvoices(typedInvoices);
       
       // Calculate stats
-      const totalInvoices = data?.length || 0;
-      const totalRevenue = data?.reduce((sum, invoice) => sum + Number(invoice.total), 0) || 0;
-      const pendingInvoices = data?.filter(invoice => invoice.status === 'sent').length || 0;
-      const overdueInvoices = data?.filter(invoice => {
+      const totalInvoices = typedInvoices?.length || 0;
+      const totalRevenue = typedInvoices?.reduce((sum, invoice) => sum + Number(invoice.total), 0) || 0;
+      const pendingInvoices = typedInvoices?.filter(invoice => invoice.status === 'sent').length || 0;
+      const overdueInvoices = typedInvoices?.filter(invoice => {
         const dueDate = new Date(invoice.due_date);
         const today = new Date();
         return invoice.status === 'sent' && dueDate < today;
