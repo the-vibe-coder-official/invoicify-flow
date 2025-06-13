@@ -1,11 +1,14 @@
+
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Users, DollarSign, TrendingUp, LogOut, User } from 'lucide-react';
+import { FileText, Users, LogOut, User } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
+import { DashboardStats } from '@/components/dashboard/DashboardStats';
+import { InvoiceOverview } from '@/components/dashboard/InvoiceOverview';
 
 interface UserProfile {
   id: string;
@@ -129,118 +132,69 @@ const Dashboard = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Gesamtrechnungen
-              </CardTitle>
-              <FileText className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">12</div>
-              <p className="text-xs text-muted-foreground">
-                +2 seit letztem Monat
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Kunden
-              </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">8</div>
-              <p className="text-xs text-muted-foreground">
-                +1 neuer Kunde
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Umsatz
-              </CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">€5.230</div>
-              <p className="text-xs text-muted-foreground">
-                +12% zum Vormonat
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
-                Offene Rechnungen
-              </CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">3</div>
-              <p className="text-xs text-muted-foreground">
-                €1.250 ausstehend
-              </p>
-            </CardContent>
-          </Card>
+        <div className="mb-8">
+          <DashboardStats />
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
-            <CardHeader>
-              <CardTitle>Neue Rechnung erstellen</CardTitle>
-              <CardDescription>
-                Erstellen Sie eine neue Rechnung für Ihre Kunden
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button 
-                className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
-                onClick={handleCreateInvoice}
-              >
-                Rechnung erstellen
-              </Button>
-            </CardContent>
-          </Card>
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Invoice Overview - Takes up 2 columns */}
+          <div className="lg:col-span-2">
+            <InvoiceOverview />
+          </div>
 
-          <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
-            <CardHeader>
-              <CardTitle>Kunden verwalten</CardTitle>
-              <CardDescription>
-                Verwalten Sie Ihre Kundendatenbank
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button 
-                variant="outline" 
-                className="w-full"
-                onClick={handleManageCustomers}
-              >
-                Kunden anzeigen
-              </Button>
-            </CardContent>
-          </Card>
+          {/* Quick Actions */}
+          <div className="space-y-6">
+            <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+              <CardHeader>
+                <CardTitle>Neue Rechnung erstellen</CardTitle>
+                <CardDescription>
+                  Erstellen Sie eine neue Rechnung für Ihre Kunden
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button 
+                  className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
+                  onClick={handleCreateInvoice}
+                >
+                  Rechnung erstellen
+                </Button>
+              </CardContent>
+            </Card>
 
-          <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
-            <CardHeader>
-              <CardTitle>Berichte anzeigen</CardTitle>
-              <CardDescription>
-                Analysieren Sie Ihre Geschäftsleistung
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button variant="outline" className="w-full">
-                Berichte öffnen
-              </Button>
-            </CardContent>
-          </Card>
+            <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+              <CardHeader>
+                <CardTitle>Kunden verwalten</CardTitle>
+                <CardDescription>
+                  Verwalten Sie Ihre Kundendatenbank
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={handleManageCustomers}
+                >
+                  <Users className="h-4 w-4 mr-2" />
+                  Kunden anzeigen
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+              <CardHeader>
+                <CardTitle>Berichte anzeigen</CardTitle>
+                <CardDescription>
+                  Analysieren Sie Ihre Geschäftsleistung
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="outline" className="w-full">
+                  Berichte öffnen
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </main>
     </div>
