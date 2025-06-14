@@ -19,11 +19,11 @@ const getStatusColor = (status: string) => {
 
 const getStatusText = (status: string) => {
   switch (status) {
-    case 'paid': return 'Bezahlt';
-    case 'sent': return 'Versendet';
-    case 'overdue': return 'Überfällig';
-    case 'draft': return 'Entwurf';
-    case 'cancelled': return 'Storniert';
+    case 'paid': return 'Paid';
+    case 'sent': return 'Sent';
+    case 'overdue': return 'Overdue';
+    case 'draft': return 'Draft';
+    case 'cancelled': return 'Cancelled';
     default: return status;
   }
 };
@@ -36,7 +36,7 @@ export const InvoiceOverview = () => {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Rechnungsübersicht</CardTitle>
+          <CardTitle>Invoice Overview</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8">
@@ -51,15 +51,15 @@ export const InvoiceOverview = () => {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Rechnungsübersicht</CardTitle>
-          <CardDescription>Hier sehen Sie Ihre neuesten Rechnungen</CardDescription>
+          <CardTitle>Invoice Overview</CardTitle>
+          <CardDescription>Here you can see your latest invoices</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
             <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500 mb-4">Noch keine Rechnungen erstellt</p>
+            <p className="text-gray-500 mb-4">No invoices created yet</p>
             <Button onClick={() => navigate('/invoice/create')}>
-              Erste Rechnung erstellen
+              Create first invoice
             </Button>
           </div>
         </CardContent>
@@ -72,12 +72,12 @@ export const InvoiceOverview = () => {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle>Rechnungsübersicht</CardTitle>
-            <CardDescription>Ihre neuesten Rechnungen</CardDescription>
+            <CardTitle>Invoice Overview</CardTitle>
+            <CardDescription>Your latest invoices</CardDescription>
           </div>
           <Button onClick={() => navigate('/invoice/create')} size="sm">
             <FileText className="h-4 w-4 mr-2" />
-            Neue Rechnung
+            New Invoice
           </Button>
         </div>
       </CardHeader>
@@ -94,12 +94,12 @@ export const InvoiceOverview = () => {
                 </div>
                 <p className="text-sm text-gray-600">{invoice.customer_name}</p>
                 <p className="text-xs text-gray-500">
-                  Erstellt: {new Date(invoice.date).toLocaleDateString('de-DE')} | 
-                  Fällig: {new Date(invoice.due_date).toLocaleDateString('de-DE')}
+                  Created: {new Date(invoice.date).toLocaleDateString('en-US')} | 
+                  Due: {new Date(invoice.due_date).toLocaleDateString('en-US')}
                 </p>
               </div>
               <div className="text-right">
-                <p className="font-bold text-lg">€{Number(invoice.total).toFixed(2)}</p>
+                <p className="font-bold text-lg">${Number(invoice.total).toFixed(2)}</p>
                 <div className="flex items-center space-x-1 mt-2">
                   <Button variant="ghost" size="sm">
                     <Eye className="h-4 w-4" />

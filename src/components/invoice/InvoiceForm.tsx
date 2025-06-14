@@ -58,12 +58,12 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Rechnungsinformationen</CardTitle>
+          <CardTitle>Invoice Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="invoiceNumber">Rechnungsnummer</Label>
+              <Label htmlFor="invoiceNumber">Invoice Number</Label>
               <Input
                 id="invoiceNumber"
                 value={invoice.invoiceNumber}
@@ -72,7 +72,7 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
               />
             </div>
             <div>
-              <Label htmlFor="date">Rechnungsdatum</Label>
+              <Label htmlFor="date">Invoice Date</Label>
               <Input
                 id="date"
                 type="date"
@@ -81,7 +81,7 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
               />
             </div>
             <div>
-              <Label htmlFor="dueDate">Fälligkeitsdatum</Label>
+              <Label htmlFor="dueDate">Due Date</Label>
               <Input
                 id="dueDate"
                 type="date"
@@ -95,35 +95,35 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Kundeninformationen</CardTitle>
+          <CardTitle>Customer Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label htmlFor="customerName">Kundenname</Label>
+            <Label htmlFor="customerName">Customer Name</Label>
             <Input
               id="customerName"
               value={invoice.customerName}
               onChange={(e) => updateInvoice({ customerName: e.target.value })}
-              placeholder="Max Mustermann"
+              placeholder="John Doe"
             />
           </div>
           <div>
-            <Label htmlFor="customerEmail">E-Mail</Label>
+            <Label htmlFor="customerEmail">Email</Label>
             <Input
               id="customerEmail"
               type="email"
               value={invoice.customerEmail}
               onChange={(e) => updateInvoice({ customerEmail: e.target.value })}
-              placeholder="max@example.com"
+              placeholder="john@example.com"
             />
           </div>
           <div>
-            <Label htmlFor="customerAddress">Adresse</Label>
+            <Label htmlFor="customerAddress">Address</Label>
             <Textarea
               id="customerAddress"
               value={invoice.customerAddress}
               onChange={(e) => updateInvoice({ customerAddress: e.target.value })}
-              placeholder="Musterstraße 1, 12345 Musterstadt"
+              placeholder="123 Main Street, 12345 City"
               rows={3}
             />
           </div>
@@ -133,10 +133,10 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Rechnungspositionen</CardTitle>
+            <CardTitle>Invoice Items</CardTitle>
             <Button onClick={addItem} size="sm">
               <Plus className="h-4 w-4 mr-2" />
-              Position hinzufügen
+              Add Item
             </Button>
           </div>
         </CardHeader>
@@ -145,15 +145,15 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
             {invoice.items.map((item, index) => (
               <div key={item.id} className="grid grid-cols-12 gap-4 items-end">
                 <div className="col-span-5">
-                  <Label>Beschreibung</Label>
+                  <Label>Description</Label>
                   <Input
                     value={item.description}
                     onChange={(e) => updateItem(index, { description: e.target.value })}
-                    placeholder="Leistungsbeschreibung"
+                    placeholder="Service description"
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label>Menge</Label>
+                  <Label>Quantity</Label>
                   <Input
                     type="number"
                     value={item.quantity}
@@ -163,7 +163,7 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label>Preis (€)</Label>
+                  <Label>Price ($)</Label>
                   <Input
                     type="number"
                     value={item.price}
@@ -173,7 +173,7 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
                   />
                 </div>
                 <div className="col-span-2">
-                  <Label>Gesamt (€)</Label>
+                  <Label>Total ($)</Label>
                   <Input
                     value={item.total.toFixed(2)}
                     readOnly
@@ -198,12 +198,12 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Steuer & Summen</CardTitle>
+          <CardTitle>Tax & Totals</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="w-32">
-              <Label htmlFor="taxRate">Steuersatz (%)</Label>
+              <Label htmlFor="taxRate">Tax Rate (%)</Label>
               <Input
                 id="taxRate"
                 type="number"
@@ -217,16 +217,16 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
             
             <div className="border-t pt-4 space-y-2">
               <div className="flex justify-between">
-                <span>Zwischensumme:</span>
-                <span>€{invoice.subtotal.toFixed(2)}</span>
+                <span>Subtotal:</span>
+                <span>${invoice.subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span>Steuer ({invoice.taxRate}%):</span>
-                <span>€{invoice.taxAmount.toFixed(2)}</span>
+                <span>Tax ({invoice.taxRate}%):</span>
+                <span>${invoice.taxAmount.toFixed(2)}</span>
               </div>
               <div className="flex justify-between font-bold text-lg border-t pt-2">
-                <span>Gesamtsumme:</span>
-                <span>€{invoice.total.toFixed(2)}</span>
+                <span>Total:</span>
+                <span>${invoice.total.toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -235,13 +235,13 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Notizen</CardTitle>
+          <CardTitle>Notes</CardTitle>
         </CardHeader>
         <CardContent>
           <Textarea
             value={invoice.notes || ''}
             onChange={(e) => updateInvoice({ notes: e.target.value })}
-            placeholder="Zusätzliche Notizen oder Zahlungsbedingungen..."
+            placeholder="Additional notes or payment terms..."
             rows={4}
           />
         </CardContent>

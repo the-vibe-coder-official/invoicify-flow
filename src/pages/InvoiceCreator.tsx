@@ -1,3 +1,4 @@
+
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -33,16 +34,16 @@ const InvoiceCreator = () => {
   const handleSave = () => {
     // TODO: Implement save to database
     toast({
-      title: "Rechnung gespeichert",
-      description: "Die Rechnung wurde erfolgreich gespeichert."
+      title: "Invoice saved",
+      description: "The invoice was successfully saved."
     });
   };
 
   const handleDownloadPDF = async () => {
     if (!previewRef.current) {
       toast({
-        title: "Fehler",
-        description: "Vorschau konnte nicht gefunden werden.",
+        title: "Error",
+        description: "Preview could not be found.",
         variant: "destructive"
       });
       return;
@@ -52,13 +53,13 @@ const InvoiceCreator = () => {
     try {
       await PDFService.generateInvoicePDF(invoice, previewRef.current);
       toast({
-        title: "PDF erfolgreich erstellt",
-        description: "Die Rechnung wurde als PDF heruntergeladen."
+        title: "PDF successfully created",
+        description: "The invoice was downloaded as PDF."
       });
     } catch (error) {
       toast({
-        title: "PDF-Fehler",
-        description: "Die PDF konnte nicht erstellt werden.",
+        title: "PDF Error",
+        description: "The PDF could not be created.",
         variant: "destructive"
       });
     } finally {
@@ -71,13 +72,13 @@ const InvoiceCreator = () => {
     try {
       await PDFService.generateAdvancedInvoicePDF(invoice);
       toast({
-        title: "PDF erfolgreich erstellt",
-        description: "Die Rechnung wurde als PDF heruntergeladen."
+        title: "PDF successfully created",
+        description: "The invoice was downloaded as PDF."
       });
     } catch (error) {
       toast({
-        title: "PDF-Fehler",
-        description: "Die PDF konnte nicht erstellt werden.",
+        title: "PDF Error",
+        description: "The PDF could not be created.",
         variant: "destructive"
       });
     } finally {
@@ -99,15 +100,15 @@ const InvoiceCreator = () => {
                 className="flex items-center space-x-2"
               >
                 <ArrowLeft className="h-4 w-4" />
-                <span>Zurück</span>
+                <span>Back</span>
               </Button>
-              <h1 className="text-xl font-bold text-slate-900">Rechnung erstellen</h1>
+              <h1 className="text-xl font-bold text-slate-900">Create Invoice</h1>
             </div>
             
             <div className="flex items-center space-x-2">
               <Button variant="outline" size="sm" onClick={handleSave}>
                 <Save className="h-4 w-4 mr-2" />
-                Speichern
+                Save
               </Button>
               <Button 
                 variant="outline" 
@@ -116,7 +117,7 @@ const InvoiceCreator = () => {
                 disabled={isGeneratingPDF}
               >
                 <Download className="h-4 w-4 mr-2" />
-                {isGeneratingPDF ? 'Generiere...' : 'PDF (Vorschau)'}
+                {isGeneratingPDF ? 'Generating...' : 'PDF (Preview)'}
               </Button>
               <Button 
                 size="sm" 
@@ -124,7 +125,7 @@ const InvoiceCreator = () => {
                 disabled={isGeneratingPDF}
               >
                 <FileText className="h-4 w-4 mr-2" />
-                {isGeneratingPDF ? 'Generiere...' : 'PDF (Formatiert)'}
+                {isGeneratingPDF ? 'Generating...' : 'PDF (Formatted)'}
               </Button>
             </div>
           </div>
@@ -138,7 +139,7 @@ const InvoiceCreator = () => {
           <div className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Rechnungsdetails</CardTitle>
+                <CardTitle>Invoice Details</CardTitle>
               </CardHeader>
               <CardContent>
                 <InvoiceForm invoice={invoice} onInvoiceChange={setInvoice} />
@@ -150,7 +151,7 @@ const InvoiceCreator = () => {
           <div className="lg:sticky lg:top-8">
             <Card>
               <CardHeader>
-                <CardTitle>Live-Vorschau</CardTitle>
+                <CardTitle>Live Preview</CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="max-h-[80vh] overflow-y-auto p-6">

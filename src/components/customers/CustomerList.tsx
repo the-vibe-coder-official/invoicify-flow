@@ -44,7 +44,7 @@ export const CustomerList = ({ customers, onEdit, onDelete, loading }: CustomerL
     return (
       <Card>
         <CardContent className="text-center py-8">
-          <p className="text-slate-600">Noch keine Kunden hinzugefügt.</p>
+          <p className="text-slate-600">No customers added yet.</p>
         </CardContent>
       </Card>
     );

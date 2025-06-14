@@ -41,8 +41,8 @@ const Customers = () => {
     } catch (error) {
       console.error('Error fetching customers:', error);
       toast({
-        title: "Fehler beim Laden",
-        description: "Kunden konnten nicht geladen werden.",
+        title: "Error loading",
+        description: "Customers could not be loaded.",
         variant: "destructive"
       });
     } finally {
@@ -69,8 +69,8 @@ const Customers = () => {
         if (error) throw error;
         
         toast({
-          title: "Kunde aktualisiert",
-          description: "Die Kundendaten wurden erfolgreich aktualisiert."
+          title: "Customer updated",
+          description: "The customer data was successfully updated."
         });
       } else {
         // Create new customer
@@ -84,8 +84,8 @@ const Customers = () => {
         if (error) throw error;
         
         toast({
-          title: "Kunde hinzugefügt",
-          description: "Der neue Kunde wurde erfolgreich hinzugefügt."
+          title: "Customer added",
+          description: "The new customer was successfully added."
         });
       }
 
@@ -95,8 +95,8 @@ const Customers = () => {
     } catch (error) {
       console.error('Error saving customer:', error);
       toast({
-        title: "Fehler beim Speichern",
-        description: "Der Kunde konnte nicht gespeichert werden.",
+        title: "Error saving",
+        description: "The customer could not be saved.",
         variant: "destructive"
       });
     } finally {
@@ -122,16 +122,16 @@ const Customers = () => {
       if (error) throw error;
       
       toast({
-        title: "Kunde gelöscht",
-        description: "Der Kunde wurde erfolgreich gelöscht."
+        title: "Customer deleted",
+        description: "The customer was successfully deleted."
       });
       
       fetchCustomers();
     } catch (error) {
       console.error('Error deleting customer:', error);
       toast({
-        title: "Fehler beim Löschen",
-        description: "Der Kunde konnte nicht gelöscht werden.",
+        title: "Error deleting",
+        description: "The customer could not be deleted.",
         variant: "destructive"
       });
     }
@@ -156,18 +156,18 @@ const Customers = () => {
                 className="flex items-center space-x-2"
               >
                 <ArrowLeft className="h-4 w-4" />
-                <span>Zurück</span>
+                <span>Back</span>
               </Button>
               <div className="flex items-center space-x-2">
                 <Users className="h-6 w-6 text-blue-600" />
-                <h1 className="text-xl font-bold text-slate-900">Kunden verwalten</h1>
+                <h1 className="text-xl font-bold text-slate-900">Manage Customers</h1>
               </div>
             </div>
             
             {!showForm && (
               <Button onClick={() => setShowForm(true)}>
                 <Plus className="h-4 w-4 mr-2" />
-                Neuer Kunde
+                New Customer
               </Button>
             )}
           </div>
@@ -191,7 +191,7 @@ const Customers = () => {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Users className="h-5 w-5" />
-                  <span>Ihre Kunden ({customers.length})</span>
+                  <span>Your Customers ({customers.length})</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>

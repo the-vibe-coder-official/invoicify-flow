@@ -24,9 +24,9 @@ const Subscription = () => {
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Zurück
+                Back
               </Button>
-              <h1 className="text-xl font-bold text-slate-900">Abonnement</h1>
+              <h1 className="text-xl font-bold text-slate-900">Subscription</h1>
             </div>
             
             <div className="flex items-center space-x-4">
@@ -41,7 +41,7 @@ const Subscription = () => {
                 className="flex items-center space-x-2"
               >
                 <LogOut className="h-4 w-4" />
-                <span>Abmelden</span>
+                <span>Sign Out</span>
               </Button>
             </div>
           </div>
@@ -54,10 +54,10 @@ const Subscription = () => {
           {/* Page Header */}
           <div className="text-center">
             <h1 className="text-3xl font-bold text-slate-900 mb-4">
-              Wählen Sie Ihren Plan
+              Choose Your Plan
             </h1>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Skalieren Sie Ihr Rechnungsmanagement mit unseren flexiblen Plänen
+              Scale your invoice management with our flexible plans
             </p>
           </div>
 
@@ -69,7 +69,7 @@ const Subscription = () => {
           {/* Pricing Plans */}
           <div>
             <h2 className="text-2xl font-bold text-slate-900 text-center mb-8">
-              Verfügbare Pläne
+              Available Plans
             </h2>
             <SubscriptionPlans />
           </div>
@@ -77,8 +77,8 @@ const Subscription = () => {
           {/* FAQ or Additional Info */}
           <div className="text-center text-sm text-slate-600 max-w-2xl mx-auto">
             <p>
-              Alle Pläne beinhalten unsere Kernfunktionen für Rechnungserstellung und -verwaltung. 
-              Sie können jederzeit upgraden oder downgraden.
+              All plans include our core features for invoice creation and management. 
+              You can upgrade or downgrade at any time.
             </p>
           </div>
         </div>
