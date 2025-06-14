@@ -36,8 +36,8 @@ export const SubscriptionStatus = () => {
   };
 
   const formatDate = (dateString?: string) => {
-    if (!dateString) return 'Kein Enddatum';
-    return new Date(dateString).toLocaleDateString('de-DE');
+    if (!dateString) return 'No end date';
+    return new Date(dateString).toLocaleDateString('en-US');
   };
 
   return (
@@ -47,13 +47,13 @@ export const SubscriptionStatus = () => {
           <div>
             <CardTitle className="flex items-center space-x-2">
               <CreditCard className="h-5 w-5" />
-              <span>Ihr Abonnement</span>
+              <span>Your Subscription</span>
             </CardTitle>
-            <CardDescription>Aktueller Plan und Nutzung</CardDescription>
+            <CardDescription>Current plan and usage</CardDescription>
           </div>
           <Button variant="outline" size="sm" onClick={checkSubscription}>
             <RefreshCw className="h-4 w-4 mr-2" />
-            Aktualisieren
+            Refresh
           </Button>
         </div>
       </CardHeader>
@@ -62,21 +62,21 @@ export const SubscriptionStatus = () => {
         {/* Current Plan */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-600">Aktueller Plan</p>
+            <p className="text-sm text-gray-600">Current Plan</p>
             <div className="flex items-center space-x-2">
               <Badge className={getTierColor(subscription.subscription_tier)}>
                 {subscription.subscription_tier}
               </Badge>
               {subscription.subscribed && (
                 <Badge variant="outline" className="text-green-600 border-green-600">
-                  Aktiv
+                  Active
                 </Badge>
               )}
             </div>
           </div>
           {subscription.subscribed && (
             <Button variant="outline" size="sm" onClick={openCustomerPortal}>
-              Verwalten
+              Manage
             </Button>
           )}
         </div>
@@ -86,7 +86,7 @@ export const SubscriptionStatus = () => {
           <div className="flex items-center space-x-2">
             <Calendar className="h-4 w-4 text-gray-500" />
             <div>
-              <p className="text-sm text-gray-600">Verlängert bis</p>
+              <p className="text-sm text-gray-600">Renews until</p>
               <p className="font-medium">{formatDate(subscription.subscription_end)}</p>
             </div>
           </div>
@@ -97,7 +97,7 @@ export const SubscriptionStatus = () => {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
               <FileText className="h-4 w-4 text-gray-500" />
-              <p className="text-sm text-gray-600">Rechnungsnutzung</p>
+              <p className="text-sm text-gray-600">Invoice Usage</p>
             </div>
             <p className="text-sm font-medium">
               {subscription.invoice_count} / {subscription.invoice_limit === -1 ? '∞' : subscription.invoice_limit}
@@ -114,7 +114,7 @@ export const SubscriptionStatus = () => {
           {subscription.subscription_tier === 'Unlimited' && (
             <div className="text-center py-2">
               <Badge variant="outline" className="text-purple-600 border-purple-600">
-                Unbegrenzte Rechnungen
+                Unlimited invoices
               </Badge>
             </div>
           )}
@@ -125,9 +125,9 @@ export const SubscriptionStatus = () => {
          subscription.invoice_count >= subscription.invoice_limit * 0.8 && (
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
             <p className="text-sm text-amber-800">
-              Sie haben {Math.round(getUsagePercentage())}% Ihres monatlichen Limits erreicht.
+              You have reached {Math.round(getUsagePercentage())}% of your monthly limit.
               {subscription.invoice_count >= subscription.invoice_limit && (
-                <span className="font-medium"> Upgraden Sie Ihren Plan, um weitere Rechnungen zu erstellen.</span>
+                <span className="font-medium"> Upgrade your plan to create more invoices.</span>
               )}
             </p>
           </div>

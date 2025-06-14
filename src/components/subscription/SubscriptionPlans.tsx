@@ -9,12 +9,12 @@ const plans = [
   {
     name: 'Free',
     price: '€0',
-    period: '/Monat',
-    description: 'Perfekt für den Einstieg',
+    period: '/month',
+    description: 'Perfect for getting started',
     features: [
-      '3 Rechnungen pro Monat',
-      'Grundlegende Vorlagen',
-      'E-Mail-Support'
+      '3 invoices per month',
+      'Basic templates',
+      'Email support'
     ],
     icon: <Check className="h-5 w-5" />,
     color: 'border-gray-200'
@@ -22,14 +22,14 @@ const plans = [
   {
     name: 'Pro',
     price: '€9.99',
-    period: '/Monat',
-    description: 'Ideal für kleine Unternehmen',
+    period: '/month',
+    description: 'Ideal for small businesses',
     features: [
-      '20 Rechnungen pro Monat',
-      'Erweiterte Vorlagen',
-      'Prioritätssupport',
-      'Kundenverwaltung',
-      'Detaillierte Berichte'
+      '20 invoices per month',
+      'Advanced templates',
+      'Priority support',
+      'Customer management',
+      'Detailed reports'
     ],
     icon: <Star className="h-5 w-5" />,
     color: 'border-blue-200',
@@ -38,15 +38,15 @@ const plans = [
   {
     name: 'Unlimited',
     price: '€19.99',
-    period: '/Monat',
-    description: 'Für wachsende Unternehmen',
+    period: '/month',
+    description: 'For growing businesses',
     features: [
-      'Unbegrenzte Rechnungen',
-      'Premium-Vorlagen',
-      '24/7 Support',
-      'API-Zugang',
-      'White-Label-Option',
-      'Erweiterte Analytik'
+      'Unlimited invoices',
+      'Premium templates',
+      '24/7 support',
+      'API access',
+      'White-label option',
+      'Advanced analytics'
     ],
     icon: <Zap className="h-5 w-5" />,
     color: 'border-purple-200'
@@ -78,7 +78,7 @@ export const SubscriptionPlans = () => {
         >
           {plan.popular && (
             <Badge className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-blue-500">
-              Beliebt
+              Popular
             </Badge>
           )}
           
@@ -112,8 +112,8 @@ export const SubscriptionPlans = () => {
               onClick={() => handlePlanSelect(plan.name)}
               disabled={plan.name === 'Free'}
             >
-              {isCurrentPlan(plan.name) ? 'Aktueller Plan - Verwalten' : 
-               plan.name === 'Free' ? 'Kostenlos' : 'Auswählen'}
+              {isCurrentPlan(plan.name) ? 'Current Plan - Manage' : 
+               plan.name === 'Free' ? 'Free' : 'Select'}
             </Button>
           </CardContent>
         </Card>
