@@ -1,10 +1,9 @@
-
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Users, LogOut, User, CreditCard } from 'lucide-react';
+import { FileText, Users, LogOut, User, CreditCard, BarChart3 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
@@ -75,6 +74,10 @@ const Dashboard = () => {
 
   const handleManageSubscription = () => {
     navigate('/subscription');
+  };
+
+  const handleViewAnalytics = () => {
+    navigate('/analytics');
   };
 
   if (loading) {
@@ -168,6 +171,25 @@ const Dashboard = () => {
 
             <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
               <CardHeader>
+                <CardTitle>Analytics & Reports</CardTitle>
+                <CardDescription>
+                  View detailed analytics and business insights
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={handleViewAnalytics}
+                >
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  View Analytics
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+              <CardHeader>
                 <CardTitle>Manage Subscription</CardTitle>
                 <CardDescription>
                   Manage your plan and billing limits
@@ -200,20 +222,6 @@ const Dashboard = () => {
                 >
                   <Users className="h-4 w-4 mr-2" />
                   View Customers
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
-              <CardHeader>
-                <CardTitle>View Reports</CardTitle>
-                <CardDescription>
-                  Analyze your business performance
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="outline" className="w-full">
-                  Open Reports
                 </Button>
               </CardContent>
             </Card>
