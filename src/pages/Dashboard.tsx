@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -39,7 +40,7 @@ const Dashboard = () => {
         if (error) {
           console.error('Error fetching profile:', error);
           toast({
-            title: "Fehler beim Laden des Profils",
+            title: "Error loading profile",
             description: error.message,
             variant: "destructive"
           });
@@ -59,8 +60,8 @@ const Dashboard = () => {
   const handleSignOut = async () => {
     await signOut();
     toast({
-      title: "Erfolgreich abgemeldet",
-      description: "Auf Wiedersehen!"
+      title: "Successfully signed out",
+      description: "See you later!"
     });
   };
 
@@ -81,7 +82,7 @@ const Dashboard = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-slate-600">Lade Dashboard...</p>
+          <p className="mt-4 text-slate-600">Loading Dashboard...</p>
         </div>
       </div>
     );
@@ -116,7 +117,7 @@ const Dashboard = () => {
                 className="flex items-center space-x-2"
               >
                 <LogOut className="h-4 w-4" />
-                <span>Abmelden</span>
+                <span>Sign Out</span>
               </Button>
             </div>
           </div>
@@ -127,10 +128,10 @@ const Dashboard = () => {
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 mb-2">
-            Willkommen, {profile?.full_name || 'Benutzer'}!
+            Welcome, {profile?.full_name || 'User'}!
           </h1>
           <p className="text-slate-600">
-            Verwalten Sie Ihre Rechnungen und überwachen Sie Ihr Geschäft
+            Manage your invoices and monitor your business
           </p>
         </div>
 
@@ -150,9 +151,9 @@ const Dashboard = () => {
           <div className="space-y-6">
             <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
               <CardHeader>
-                <CardTitle>Neue Rechnung erstellen</CardTitle>
+                <CardTitle>Create New Invoice</CardTitle>
                 <CardDescription>
-                  Erstellen Sie eine neue Rechnung für Ihre Kunden
+                  Create a new invoice for your customers
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -160,16 +161,16 @@ const Dashboard = () => {
                   className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
                   onClick={handleCreateInvoice}
                 >
-                  Rechnung erstellen
+                  Create Invoice
                 </Button>
               </CardContent>
             </Card>
 
             <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
               <CardHeader>
-                <CardTitle>Abonnement verwalten</CardTitle>
+                <CardTitle>Manage Subscription</CardTitle>
                 <CardDescription>
-                  Verwalten Sie Ihren Plan und Ihre Rechnungslimits
+                  Manage your plan and billing limits
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -179,16 +180,16 @@ const Dashboard = () => {
                   onClick={handleManageSubscription}
                 >
                   <CreditCard className="h-4 w-4 mr-2" />
-                  Abonnement anzeigen
+                  View Subscription
                 </Button>
               </CardContent>
             </Card>
 
             <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
               <CardHeader>
-                <CardTitle>Kunden verwalten</CardTitle>
+                <CardTitle>Manage Customers</CardTitle>
                 <CardDescription>
-                  Verwalten Sie Ihre Kundendatenbank
+                  Manage your customer database
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -198,21 +199,21 @@ const Dashboard = () => {
                   onClick={handleManageCustomers}
                 >
                   <Users className="h-4 w-4 mr-2" />
-                  Kunden anzeigen
+                  View Customers
                 </Button>
               </CardContent>
             </Card>
 
             <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
               <CardHeader>
-                <CardTitle>Berichte anzeigen</CardTitle>
+                <CardTitle>View Reports</CardTitle>
                 <CardDescription>
-                  Analysieren Sie Ihre Geschäftsleistung
+                  Analyze your business performance
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button variant="outline" className="w-full">
-                  Berichte öffnen
+                  Open Reports
                 </Button>
               </CardContent>
             </Card>

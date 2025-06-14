@@ -28,14 +28,14 @@ export const DashboardStats = () => {
       <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Gesamtrechnungen
+            Total Invoices
           </CardTitle>
           <FileText className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{stats.totalInvoices}</div>
           <p className="text-xs text-muted-foreground">
-            Alle erstellten Rechnungen
+            All created invoices
           </p>
         </CardContent>
       </Card>
@@ -43,14 +43,14 @@ export const DashboardStats = () => {
       <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Offene Rechnungen
+            Pending Invoices
           </CardTitle>
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{stats.pendingInvoices}</div>
           <p className="text-xs text-muted-foreground">
-            Wartend auf Zahlung
+            Awaiting payment
           </p>
         </CardContent>
       </Card>
@@ -58,14 +58,14 @@ export const DashboardStats = () => {
       <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Gesamtumsatz
+            Total Revenue
           </CardTitle>
           <DollarSign className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">€{stats.totalRevenue.toFixed(2)}</div>
           <p className="text-xs text-muted-foreground">
-            Aus allen Rechnungen
+            From all invoices
           </p>
         </CardContent>
       </Card>
@@ -73,14 +73,14 @@ export const DashboardStats = () => {
       <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Überfällige Rechnungen
+            Overdue Invoices
           </CardTitle>
           <Users className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold text-red-600">{stats.overdueInvoices}</div>
           <p className="text-xs text-muted-foreground">
-            Benötigen Aufmerksamkeit
+            Need attention
           </p>
         </CardContent>
       </Card>
