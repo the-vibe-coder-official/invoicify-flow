@@ -50,7 +50,7 @@ export const useInvoices = () => {
 
       if (error) {
         toast({
-          title: "Fehler beim Laden der Rechnungen",
+          title: "Error loading invoices",
           description: error.message,
           variant: "destructive"
         });
@@ -84,8 +84,8 @@ export const useInvoices = () => {
     } catch (error) {
       console.error('Error fetching invoices:', error);
       toast({
-        title: "Fehler",
-        description: "Rechnungen konnten nicht geladen werden",
+        title: "Error",
+        description: "Could not load invoices",
         variant: "destructive"
       });
     } finally {

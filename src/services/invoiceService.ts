@@ -49,6 +49,6 @@ export const saveInvoiceToDatabase = async (invoice: Invoice, userId: string): P
     return invoiceId;
   } catch (error) {
     console.error('Error saving invoice:', error);
-    throw new Error('Rechnung konnte nicht gespeichert werden');
+    throw new Error('Could not save invoice to database');
   }
 };

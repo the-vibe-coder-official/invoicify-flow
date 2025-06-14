@@ -1,20 +1,23 @@
-
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Download, Save, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 import { Invoice } from '@/types/invoice';
 import { InvoiceForm } from '@/components/invoice/InvoiceForm';
 import { InvoicePreview } from '@/components/invoice/InvoicePreview';
 import { PDFService } from '@/services/pdfService';
+import { saveInvoiceToDatabase } from '@/services/invoiceService';
 
 const InvoiceCreator = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   const previewRef = useRef<HTMLDivElement>(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const [invoice, setInvoice] = useState<Invoice>({
     invoiceNumber: `INV-${Date.now()}`,
@@ -31,12 +34,55 @@ const InvoiceCreator = () => {
     notes: ''
   });
 
-  const handleSave = () => {
-    // TODO: Implement save to database
-    toast({
-      title: "Invoice saved",
-      description: "The invoice was successfully saved."
-    });
+  const handleSave = async () => {
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please log in to save invoices.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!invoice.customerName.trim()) {
+      toast({
+        title: "Validation error",
+        description: "Please enter a customer name.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (invoice.items.length === 0) {
+      toast({
+        title: "Validation error",
+        description: "Please add at least one invoice item.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const invoiceId = await saveInvoiceToDatabase(invoice, user.id);
+      
+      // Update the invoice with the database ID
+      setInvoice(prev => ({ ...prev, id: invoiceId }));
+      
+      toast({
+        title: "Invoice saved",
+        description: "The invoice was successfully saved to the database."
+      });
+    } catch (error) {
+      console.error('Error saving invoice:', error);
+      toast({
+        title: "Save failed",
+        description: "Could not save the invoice. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleDownloadPDF = async () => {
@@ -106,9 +152,14 @@ const InvoiceCreator = () => {
             </div>
             
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" onClick={handleSave}>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleSave}
+                disabled={isSaving}
+              >
                 <Save className="h-4 w-4 mr-2" />
-                Save
+                {isSaving ? 'Saving...' : 'Save'}
               </Button>
               <Button 
                 variant="outline" 
