@@ -31,7 +31,8 @@ const InvoiceCreator = () => {
     taxRate: 19,
     taxAmount: 0,
     total: 0,
-    notes: ''
+    notes: '',
+    template: 'modern'
   });
 
   const handleSave = async () => {

@@ -6,7 +6,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Trash2 } from 'lucide-react';
-import { Invoice, InvoiceItem } from '@/types/invoice';
+import { Invoice, InvoiceItem, InvoiceTemplate } from '@/types/invoice';
+import { TemplateSelector } from './TemplateSelector';
 
 interface InvoiceFormProps {
   invoice: Invoice;
@@ -28,6 +29,10 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
       taxAmount,
       total
     });
+  };
+
+  const handleTemplateChange = (template: InvoiceTemplate) => {
+    updateInvoice({ template });
   };
 
   const addItem = () => {
@@ -56,6 +61,11 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
 
   return (
     <div className="space-y-6">
+      <TemplateSelector 
+        selectedTemplate={invoice.template || 'modern'} 
+        onTemplateChange={handleTemplateChange} 
+      />
+
       <Card>
         <CardHeader>
           <CardTitle>Invoice Information</CardTitle>

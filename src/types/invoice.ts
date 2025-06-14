@@ -7,6 +7,8 @@ export interface InvoiceItem {
   total: number;
 }
 
+export type InvoiceTemplate = 'modern' | 'classic' | 'minimal';
+
 export interface Invoice {
   id?: string;
   invoiceNumber: string;
@@ -21,4 +23,5 @@ export interface Invoice {
   taxAmount: number;
   total: number;
   notes?: string;
+  template?: InvoiceTemplate;
 }
