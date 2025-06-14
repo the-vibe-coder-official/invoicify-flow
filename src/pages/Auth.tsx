@@ -29,14 +29,14 @@ const Auth = () => {
     
     if (error) {
       toast({
-        title: "Anmeldung fehlgeschlagen",
+        title: "Login failed",
         description: error.message,
         variant: "destructive"
       });
     } else {
       toast({
-        title: "Erfolgreich angemeldet",
-        description: "Willkommen zurück!"
+        title: "Successfully logged in",
+        description: "Welcome back!"
       });
       navigate('/dashboard');
     }
@@ -52,14 +52,14 @@ const Auth = () => {
     
     if (error) {
       toast({
-        title: "Registrierung fehlgeschlagen",
+        title: "Registration failed",
         description: error.message,
         variant: "destructive"
       });
     } else {
       toast({
-        title: "Registrierung erfolgreich",
-        description: "Bitte überprüfen Sie Ihre E-Mail zur Bestätigung."
+        title: "Registration successful",
+        description: "Please check your email for confirmation."
       });
     }
     
@@ -81,33 +81,33 @@ const Auth = () => {
 
         <Card className="shadow-xl border-0 bg-white/95 backdrop-blur-sm">
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold">Willkommen</CardTitle>
+            <CardTitle className="text-2xl font-bold">Welcome</CardTitle>
             <CardDescription>
-              Melden Sie sich an oder erstellen Sie ein neues Konto
+              Sign in to your account or create a new one
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="login">Anmelden</TabsTrigger>
-                <TabsTrigger value="register">Registrieren</TabsTrigger>
+                <TabsTrigger value="login">Sign In</TabsTrigger>
+                <TabsTrigger value="register">Sign Up</TabsTrigger>
               </TabsList>
               
               <TabsContent value="login">
                 <form onSubmit={handleSignIn} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">E-Mail</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder="ihre@email.de"
+                      placeholder="your@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password">Passwort</Label>
+                    <Label htmlFor="password">Password</Label>
                     <Input
                       id="password"
                       type="password"
@@ -121,7 +121,7 @@ const Auth = () => {
                     className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700" 
                     disabled={loading}
                   >
-                    {loading ? "Wird angemeldet..." : "Anmelden"}
+                    {loading ? "Signing in..." : "Sign In"}
                   </Button>
                 </form>
               </TabsContent>
@@ -129,29 +129,29 @@ const Auth = () => {
               <TabsContent value="register">
                 <form onSubmit={handleSignUp} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="fullName">Vollständiger Name</Label>
+                    <Label htmlFor="fullName">Full Name</Label>
                     <Input
                       id="fullName"
                       type="text"
-                      placeholder="Max Mustermann"
+                      placeholder="John Doe"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email">E-Mail</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder="ihre@email.de"
+                      placeholder="your@email.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password">Passwort</Label>
+                    <Label htmlFor="password">Password</Label>
                     <Input
                       id="password"
                       type="password"
@@ -166,7 +166,7 @@ const Auth = () => {
                     className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700" 
                     disabled={loading}
                   >
-                    {loading ? "Wird registriert..." : "Registrieren"}
+                    {loading ? "Signing up..." : "Sign Up"}
                   </Button>
                 </form>
               </TabsContent>
