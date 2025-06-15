@@ -23,37 +23,40 @@ export const Header = () => {
   };
 
   return (
-    <header className="relative z-50 backdrop-blur-md bg-white/80 border-b border-white/20">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-gray-800">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate('/')}>
-            <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg">
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => navigate('/')}>
+            <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
               <FileText className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <span className="text-xl font-bold text-white">
               InvoiceFlow
             </span>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-slate-600 hover:text-slate-900 transition-colors duration-200">
+            <a href="#features" className="text-gray-300 hover:text-white transition-colors duration-200">
               Features
             </a>
-            <a href="#pricing" className="text-slate-600 hover:text-slate-900 transition-colors duration-200">
+            <a href="#pricing" className="text-gray-300 hover:text-white transition-colors duration-200">
               Pricing
             </a>
-            <a href="#about" className="text-slate-600 hover:text-slate-900 transition-colors duration-200">
-              About
+            <a href="#stories" className="text-gray-300 hover:text-white transition-colors duration-200">
+              Stories
+            </a>
+            <a href="#faq" className="text-gray-300 hover:text-white transition-colors duration-200">
+              FAQ
             </a>
             {!user && (
-              <Button variant="ghost" className="text-slate-600 hover:text-slate-900" onClick={handleSignIn}>
+              <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800" onClick={handleSignIn}>
                 Sign In
               </Button>
             )}
             <Button 
-              className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg"
+              className="bg-white text-black hover:bg-gray-100 font-semibold px-6 py-2 rounded-lg transition-all duration-300"
               onClick={handleGetStarted}
             >
               {user ? 'Dashboard' : 'Get Started'}
@@ -62,7 +65,7 @@ export const Header = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors"
+            className="md:hidden p-2 rounded-lg hover:bg-gray-800 transition-colors text-white"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -71,25 +74,28 @@ export const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-white/95 backdrop-blur-md border-b border-white/20 shadow-lg">
+          <div className="md:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-md border-b border-gray-800 shadow-lg">
             <nav className="px-4 py-6 space-y-4">
-              <a href="#features" className="block text-slate-600 hover:text-slate-900 transition-colors">
+              <a href="#features" className="block text-gray-300 hover:text-white transition-colors">
                 Features
               </a>
-              <a href="#pricing" className="block text-slate-600 hover:text-slate-900 transition-colors">
+              <a href="#pricing" className="block text-gray-300 hover:text-white transition-colors">
                 Pricing
               </a>
-              <a href="#about" className="block text-slate-600 hover:text-slate-900 transition-colors">
-                About
+              <a href="#stories" className="block text-gray-300 hover:text-white transition-colors">
+                Stories
+              </a>
+              <a href="#faq" className="block text-gray-300 hover:text-white transition-colors">
+                FAQ
               </a>
               <div className="pt-4 space-y-2">
                 {!user && (
-                  <Button variant="ghost" className="w-full justify-start" onClick={handleSignIn}>
+                  <Button variant="ghost" className="w-full justify-start text-gray-300 hover:text-white hover:bg-gray-800" onClick={handleSignIn}>
                     Sign In
                   </Button>
                 )}
                 <Button 
-                  className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white"
+                  className="w-full bg-white text-black hover:bg-gray-100 font-semibold"
                   onClick={handleGetStarted}
                 >
                   {user ? 'Dashboard' : 'Get Started'}
