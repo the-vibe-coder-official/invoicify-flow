@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -143,9 +142,16 @@ const Customers = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-black relative overflow-hidden">
+      {/* Background gradient effects */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
+      </div>
+
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-white/20 shadow-sm">
+      <header className="relative z-10 bg-gray-900/50 backdrop-blur-xl border-b border-gray-700/50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
@@ -153,19 +159,22 @@ const Customers = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate('/dashboard')}
-                className="flex items-center space-x-2"
+                className="text-gray-300 hover:text-white hover:bg-gray-800/50"
               >
-                <ArrowLeft className="h-4 w-4" />
-                <span>Back</span>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
               </Button>
-              <div className="flex items-center space-x-2">
-                <Users className="h-6 w-6 text-blue-600" />
-                <h1 className="text-xl font-bold text-slate-900">Manage Customers</h1>
+              <div className="flex items-center space-x-3">
+                <Users className="h-6 w-6 text-blue-400" />
+                <h1 className="text-xl font-bold gradient-text">Manage Customers</h1>
               </div>
             </div>
             
             {!showForm && (
-              <Button onClick={() => setShowForm(true)}>
+              <Button 
+                onClick={() => setShowForm(true)}
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 New Customer
               </Button>
@@ -175,7 +184,7 @@ const Customers = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {showForm ? (
           <div className="max-w-2xl mx-auto">
             <CustomerForm
@@ -187,9 +196,9 @@ const Customers = () => {
           </div>
         ) : (
           <div className="space-y-6">
-            <Card>
+            <Card className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 shadow-2xl">
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
+                <CardTitle className="flex items-center space-x-2 text-white">
                   <Users className="h-5 w-5" />
                   <span>Your Customers ({customers.length})</span>
                 </CardTitle>

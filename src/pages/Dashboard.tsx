@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -82,32 +83,45 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-black relative overflow-hidden flex items-center justify-center">
+        {/* Background gradient effects */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
+        </div>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-slate-600">Loading Dashboard...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-white">Loading Dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-black relative overflow-hidden">
+      {/* Background gradient effects */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl"></div>
+      </div>
+
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-white/20 shadow-sm">
+      <header className="relative z-10 bg-gray-900/50 backdrop-blur-xl border-b border-gray-700/50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-2">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg">
                 <FileText className="h-6 w-6 text-white" />
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <span className="text-xl font-bold gradient-text">
                 InvoiceFlow
               </span>
             </div>
             
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2 text-slate-600">
+              <div className="flex items-center space-x-2 text-gray-300">
                 <User className="h-4 w-4" />
                 <span className="text-sm">
                   {profile?.full_name || user?.email}
@@ -117,10 +131,10 @@ const Dashboard = () => {
                 variant="outline" 
                 size="sm" 
                 onClick={handleSignOut}
-                className="flex items-center space-x-2"
+                className="bg-gray-800/50 border-gray-600/50 text-white hover:bg-gray-700/50"
               >
-                <LogOut className="h-4 w-4" />
-                <span>Sign Out</span>
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
               </Button>
             </div>
           </div>
@@ -128,13 +142,13 @@ const Dashboard = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">
-            Welcome, {profile?.full_name || 'User'}!
+          <h1 className="text-4xl font-bold text-white mb-4">
+            Welcome back, <span className="gradient-text">{profile?.full_name || 'User'}</span>!
           </h1>
-          <p className="text-slate-600">
-            Manage your invoices and monitor your business
+          <p className="text-xl text-gray-300">
+            Manage your invoices and monitor your business performance
           </p>
         </div>
 
@@ -152,34 +166,35 @@ const Dashboard = () => {
 
           {/* Quick Actions */}
           <div className="space-y-6">
-            <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+            <Card className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 shadow-2xl">
               <CardHeader>
-                <CardTitle>Create New Invoice</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-white">Create New Invoice</CardTitle>
+                <CardDescription className="text-gray-300">
                   Create a new invoice for your customers
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button 
-                  className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700"
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold h-12 shadow-lg transition-all duration-300 transform hover:scale-105"
                   onClick={handleCreateInvoice}
                 >
+                  <FileText className="h-4 w-4 mr-2" />
                   Create Invoice
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+            <Card className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 shadow-2xl">
               <CardHeader>
-                <CardTitle>Analytics & Reports</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-white">Analytics & Reports</CardTitle>
+                <CardDescription className="text-gray-300">
                   View detailed analytics and business insights
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button 
                   variant="outline" 
-                  className="w-full"
+                  className="w-full bg-gray-800/50 border-gray-600/50 text-white hover:bg-gray-700/50 h-12"
                   onClick={handleViewAnalytics}
                 >
                   <BarChart3 className="h-4 w-4 mr-2" />
@@ -188,17 +203,17 @@ const Dashboard = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+            <Card className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 shadow-2xl">
               <CardHeader>
-                <CardTitle>Manage Subscription</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-white">Manage Subscription</CardTitle>
+                <CardDescription className="text-gray-300">
                   Manage your plan and billing limits
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button 
                   variant="outline" 
-                  className="w-full"
+                  className="w-full bg-gray-800/50 border-gray-600/50 text-white hover:bg-gray-700/50 h-12"
                   onClick={handleManageSubscription}
                 >
                   <CreditCard className="h-4 w-4 mr-2" />
@@ -207,17 +222,17 @@ const Dashboard = () => {
               </CardContent>
             </Card>
 
-            <Card className="bg-white/95 backdrop-blur-sm shadow-lg border-0">
+            <Card className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 shadow-2xl">
               <CardHeader>
-                <CardTitle>Manage Customers</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-white">Manage Customers</CardTitle>
+                <CardDescription className="text-gray-300">
                   Manage your customer database
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button 
                   variant="outline" 
-                  className="w-full"
+                  className="w-full bg-gray-800/50 border-gray-600/50 text-white hover:bg-gray-700/50 h-12"
                   onClick={handleManageCustomers}
                 >
                   <Users className="h-4 w-4 mr-2" />
