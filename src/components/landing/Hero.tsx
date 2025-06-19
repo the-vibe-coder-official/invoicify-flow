@@ -1,8 +1,21 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 export const Hero = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleGoDashboard = () => {
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
       {/* Background gradient effects */}
@@ -34,9 +47,10 @@ export const Hero = () => {
             <Button 
               size="lg" 
               className="bg-white text-black hover:bg-gray-100 font-semibold px-8 py-4 text-lg rounded-lg transition-all duration-300 transform hover:scale-105"
+              onClick={handleGoDashboard}
             >
               <ArrowRight className="mr-2 h-5 w-5" />
-              Start Free Trial
+              Go to Dashboard
             </Button>
             
             <Button 
