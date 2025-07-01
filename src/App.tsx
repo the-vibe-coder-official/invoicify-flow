@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import InvoiceCreator from "./pages/InvoiceCreator";
 import Customers from "./pages/Customers";
 import Analytics from "./pages/Analytics";
+import Pricing from "./pages/Pricing";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./pages/NotFound";
 import Subscription from "./pages/Subscription";
@@ -27,6 +28,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route 
               path="/dashboard" 
               element={
