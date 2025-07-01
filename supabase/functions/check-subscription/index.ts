@@ -44,11 +44,13 @@ serve(async (req) => {
     
     const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
     if (userError) {
+      logStep("Authentication failed", { error: userError.message });
       throw new Error(`Authentication error: ${userError.message}`);
     }
     
     const user = userData.user;
     if (!user?.email) {
+      logStep("User email not available");
       throw new Error("User not authenticated or email not available");
     }
     logStep("User authenticated", { userId: user.id, email: user.email });
@@ -117,10 +119,14 @@ serve(async (req) => {
     );
 
     // Get current invoice count from database
-    const { data: invoices } = await supabaseService
+    const { data: invoices, error: invoiceError } = await supabaseService
       .from("invoices")
       .select("id")
       .eq("user_id", user.id);
+    
+    if (invoiceError) {
+      logStep("Error fetching invoices", { error: invoiceError.message });
+    }
     
     const invoiceCount = invoices?.length || 0;
 
