@@ -49,6 +49,14 @@ function App() {
                 }
               />
               <Route
+                path="/invoice/create"
+                element={
+                  <ProtectedRoute>
+                    <InvoiceCreator />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/customers"
                 element={
                   <ProtectedRoute>
