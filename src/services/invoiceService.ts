@@ -15,6 +15,7 @@ export const saveInvoiceToDatabase = async (invoice: Invoice, userId: string): P
         customer_name: invoice.customerName,
         customer_email: invoice.customerEmail,
         customer_address: invoice.customerAddress,
+        customer_logo_url: invoice.customerLogoUrl,
         subtotal: invoice.subtotal,
         tax_rate: invoice.taxRate,
         tax_amount: invoice.taxAmount,

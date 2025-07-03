@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Trash2 } from 'lucide-react';
 import { Invoice, InvoiceItem, InvoiceTemplate } from '@/types/invoice';
 import { TemplateSelector } from './TemplateSelector';
+import { LogoUpload } from './LogoUpload';
 
 interface InvoiceFormProps {
   invoice: Invoice;
@@ -33,6 +33,14 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
 
   const handleTemplateChange = (template: InvoiceTemplate) => {
     updateInvoice({ template });
+  };
+
+  const handleLogoUpload = (logoUrl: string) => {
+    updateInvoice({ customerLogoUrl: logoUrl });
+  };
+
+  const handleLogoRemove = () => {
+    updateInvoice({ customerLogoUrl: undefined });
   };
 
   const addItem = () => {
@@ -108,6 +116,12 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
           <CardTitle>Customer Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <LogoUpload
+            currentLogoUrl={invoice.customerLogoUrl}
+            onLogoUpload={handleLogoUpload}
+            onLogoRemove={handleLogoRemove}
+          />
+          
           <div>
             <Label htmlFor="customerName">Customer Name</Label>
             <Input

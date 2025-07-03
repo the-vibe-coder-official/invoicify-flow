@@ -17,6 +17,7 @@ export interface Invoice {
   customerName: string;
   customerEmail: string;
   customerAddress: string;
+  customerLogoUrl?: string;
   items: InvoiceItem[];
   subtotal: number;
   taxRate: number;
