@@ -1,14 +1,14 @@
-
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Users, LogOut, User, CreditCard, BarChart3 } from 'lucide-react';
+import { FileText, Users, CreditCard, BarChart3 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { DashboardStats } from '@/components/dashboard/DashboardStats';
 import { InvoiceOverview } from '@/components/dashboard/InvoiceOverview';
+import { DashboardNavigation } from '@/components/dashboard/DashboardNavigation';
 
 interface UserProfile {
   id: string;
@@ -20,7 +20,7 @@ interface UserProfile {
 }
 
 const Dashboard = () => {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -56,14 +56,6 @@ const Dashboard = () => {
 
     fetchProfile();
   }, [user, toast]);
-
-  const handleSignOut = async () => {
-    await signOut();
-    toast({
-      title: "Successfully signed out",
-      description: "See you later!"
-    });
-  };
 
   const handleCreateInvoice = () => {
     navigate('/invoice/create');
@@ -120,23 +112,7 @@ const Dashboard = () => {
               </span>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2 text-gray-300">
-                <User className="h-4 w-4" />
-                <span className="text-sm">
-                  {profile?.full_name || user?.email}
-                </span>
-              </div>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleSignOut}
-                className="bg-gray-800/50 border-gray-600/50 text-white hover:bg-gray-700/50"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Sign Out
-              </Button>
-            </div>
+            <DashboardNavigation />
           </div>
         </div>
       </header>

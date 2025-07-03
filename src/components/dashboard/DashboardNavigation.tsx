@@ -29,7 +29,7 @@ export const DashboardNavigation = () => {
     <div className="flex items-center space-x-4">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="bg-gray-800/50 border-gray-600/50 text-white hover:bg-gray-700/50">
             <User className="h-4 w-4 mr-2" />
             {user?.email}
           </Button>
