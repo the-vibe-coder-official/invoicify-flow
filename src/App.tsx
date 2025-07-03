@@ -1,3 +1,4 @@
+
 import {
   BrowserRouter as Router,
   Route,
@@ -15,12 +16,14 @@ import Customers from "@/pages/Customers";
 import Analytics from "@/pages/Analytics";
 import Subscription from "@/pages/Subscription";
 import { Toaster } from "@/components/ui/toaster";
-import { QueryClient } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Settings from "@/pages/Settings";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClient>
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Router>
           <div className="min-h-screen bg-background">
@@ -82,7 +85,7 @@ function App() {
           </div>
         </Router>
       </AuthProvider>
-    </QueryClient>
+    </QueryClientProvider>
   );
 }
 
