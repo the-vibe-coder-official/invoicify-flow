@@ -5,11 +5,13 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Calendar, CreditCard, FileText, RefreshCw } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useInvoices } from '@/hooks/useInvoices';
 
 export const SubscriptionStatus = () => {
   const { subscription, loading, checkSubscription, openCustomerPortal } = useSubscription();
+  const { stats, loading: invoicesLoading } = useInvoices();
 
-  if (loading) {
+  if (loading || invoicesLoading) {
     return (
       <Card>
         <CardContent className="p-6">
@@ -32,7 +34,7 @@ export const SubscriptionStatus = () => {
 
   const getUsagePercentage = () => {
     if (subscription.subscription_tier === 'Unlimited') return 0;
-    return (subscription.invoice_count / subscription.invoice_limit) * 100;
+    return (stats.totalInvoices / subscription.invoice_limit) * 100;
   };
 
   const formatDate = (dateString?: string) => {
@@ -100,7 +102,7 @@ export const SubscriptionStatus = () => {
               <p className="text-sm text-gray-600">Invoice Usage</p>
             </div>
             <p className="text-sm font-medium">
-              {subscription.invoice_count} / {subscription.invoice_limit === -1 ? '∞' : subscription.invoice_limit}
+              {stats.totalInvoices} / {subscription.invoice_limit === -1 ? '∞' : subscription.invoice_limit}
             </p>
           </div>
           
@@ -122,11 +124,11 @@ export const SubscriptionStatus = () => {
 
         {/* Usage Warning */}
         {subscription.subscription_tier !== 'Unlimited' && 
-         subscription.invoice_count >= subscription.invoice_limit * 0.8 && (
+         stats.totalInvoices >= subscription.invoice_limit * 0.8 && (
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
             <p className="text-sm text-amber-800">
               You have reached {Math.round(getUsagePercentage())}% of your monthly limit.
-              {subscription.invoice_count >= subscription.invoice_limit && (
+              {stats.totalInvoices >= subscription.invoice_limit && (
                 <span className="font-medium"> Upgrade your plan to create more invoices.</span>
               )}
             </p>
