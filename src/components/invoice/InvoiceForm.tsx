@@ -8,6 +8,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import { Invoice, InvoiceItem, InvoiceTemplate } from '@/types/invoice';
 import { TemplateSelector } from './TemplateSelector';
 import { LogoUpload } from './LogoUpload';
+import { BankAccountSelector } from './BankAccountSelector';
 
 interface InvoiceFormProps {
   invoice: Invoice;
@@ -41,6 +42,10 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
 
   const handleLogoRemove = () => {
     updateInvoice({ customerLogoUrl: undefined });
+  };
+
+  const handleBankAccountSelect = (bankAccountId: string | undefined) => {
+    updateInvoice({ bankAccountId });
   };
 
   const addItem = () => {
@@ -110,6 +115,11 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
           </div>
         </CardContent>
       </Card>
+
+      <BankAccountSelector
+        selectedBankAccountId={invoice.bankAccountId}
+        onBankAccountSelect={handleBankAccountSelect}
+      />
 
       <Card>
         <CardHeader>

@@ -25,4 +25,5 @@ export interface Invoice {
   total: number;
   notes?: string;
   template?: InvoiceTemplate;
+  bankAccountId?: string;
 }

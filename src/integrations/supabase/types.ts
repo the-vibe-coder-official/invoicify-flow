@@ -9,6 +9,57 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      bank_accounts: {
+        Row: {
+          account_name: string
+          account_number: string | null
+          account_type: string
+          bank_name: string | null
+          bic_swift: string | null
+          created_at: string
+          iban: string | null
+          id: string
+          is_default: boolean | null
+          routing_number: string | null
+          sort_code: string | null
+          uk_account_number: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_name: string
+          account_number?: string | null
+          account_type: string
+          bank_name?: string | null
+          bic_swift?: string | null
+          created_at?: string
+          iban?: string | null
+          id?: string
+          is_default?: boolean | null
+          routing_number?: string | null
+          sort_code?: string | null
+          uk_account_number?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_name?: string
+          account_number?: string | null
+          account_type?: string
+          bank_name?: string | null
+          bic_swift?: string | null
+          created_at?: string
+          iban?: string | null
+          id?: string
+          is_default?: boolean | null
+          routing_number?: string | null
+          sort_code?: string | null
+          uk_account_number?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       customers: {
         Row: {
           address: string | null
@@ -91,6 +142,7 @@ export type Database = {
       }
       invoices: {
         Row: {
+          bank_account_id: string | null
           created_at: string
           customer_address: string | null
           customer_email: string | null
@@ -111,6 +163,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          bank_account_id?: string | null
           created_at?: string
           customer_address?: string | null
           customer_email?: string | null
@@ -131,6 +184,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          bank_account_id?: string | null
           created_at?: string
           customer_address?: string | null
           customer_email?: string | null
@@ -151,6 +205,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "invoices_bank_account_id_fkey"
+            columns: ["bank_account_id"]
+            isOneToOne: false
+            referencedRelation: "bank_accounts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "invoices_customer_id_fkey"
             columns: ["customer_id"]

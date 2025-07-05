@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { Invoice } from '@/types/invoice';
 
@@ -21,7 +20,8 @@ export const saveInvoiceToDatabase = async (invoice: Invoice, userId: string): P
         tax_amount: invoice.taxAmount,
         total: invoice.total,
         status: 'draft',
-        notes: invoice.notes
+        notes: invoice.notes,
+        bank_account_id: invoice.bankAccountId
       })
       .select('id')
       .single();
@@ -96,7 +96,8 @@ export const getInvoiceById = async (invoiceId: string): Promise<Invoice> => {
       taxAmount: invoiceData.tax_amount,
       total: invoiceData.total,
       notes: invoiceData.notes || '',
-      template: 'modern' // Default template since it's not stored in DB
+      template: 'modern', // Default template since it's not stored in DB
+      bankAccountId: invoiceData.bank_account_id
     };
 
     return invoice;
@@ -124,6 +125,7 @@ export const updateInvoice = async (invoiceId: string, invoice: Invoice): Promis
         tax_amount: invoice.taxAmount,
         total: invoice.total,
         notes: invoice.notes,
+        bank_account_id: invoice.bankAccountId,
         updated_at: new Date().toISOString()
       })
       .eq('id', invoiceId);
