@@ -12,6 +12,7 @@ import Pricing from "@/pages/Pricing";
 import NotFound from "@/pages/NotFound";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import InvoiceCreator from "@/pages/InvoiceCreator";
+import InvoiceEditor from "@/pages/InvoiceEditor";
 import Customers from "@/pages/Customers";
 import Analytics from "@/pages/Analytics";
 import Subscription from "@/pages/Subscription";
@@ -53,6 +54,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <InvoiceCreator />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/invoice/edit/:id"
+                element={
+                  <ProtectedRoute>
+                    <InvoiceEditor />
                   </ProtectedRoute>
                 }
               />
