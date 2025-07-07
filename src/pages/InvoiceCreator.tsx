@@ -1,3 +1,4 @@
+
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -67,7 +68,6 @@ const InvoiceCreator = () => {
     try {
       const invoiceId = await saveInvoiceToDatabase(invoice, user.id);
       
-      // Update the invoice with the database ID
       setInvoice(prev => ({ ...prev, id: invoiceId }));
       
       toast({
