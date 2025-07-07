@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +17,7 @@ const InvoiceCreator = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { checkInvoiceLimit, checkSubscription } = useSubscription();
+  const { checkInvoiceLimit, checkSubscription, canCreateInvoice } = useSubscription();
   const previewRef = useRef<HTMLDivElement>(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -40,12 +41,14 @@ const InvoiceCreator = () => {
   // Check invoice limits on component mount
   useEffect(() => {
     if (user) {
-      if (!checkInvoiceLimit()) {
+      console.log('Checking invoice limit on mount...');
+      if (!canCreateInvoice()) {
+        console.log('User cannot create invoice, redirecting to dashboard');
         // If user has reached limit, redirect them back to dashboard
         navigate('/dashboard');
       }
     }
-  }, [user, checkInvoiceLimit, navigate]);
+  }, [user, canCreateInvoice, navigate]);
 
   const handleSave = async () => {
     if (!user) {
@@ -57,9 +60,11 @@ const InvoiceCreator = () => {
       return;
     }
 
-    // Check invoice limit before saving
+    // IMPORTANT: Check invoice limit before saving and prevent saving if limit reached
+    console.log('Checking invoice limit before saving...');
     if (!checkInvoiceLimit()) {
-      return;
+      console.log('Invoice limit reached, preventing save');
+      return; // Exit early if limit is reached
     }
 
     if (!invoice.customerName.trim()) {
@@ -82,6 +87,7 @@ const InvoiceCreator = () => {
 
     setIsSaving(true);
     try {
+      console.log('Attempting to save invoice...');
       const invoiceId = await saveInvoiceToDatabase(invoice, user.id);
       
       setInvoice(prev => ({ ...prev, id: invoiceId }));
@@ -93,6 +99,15 @@ const InvoiceCreator = () => {
         title: "Invoice saved",
         description: "The invoice was successfully saved to the database."
       });
+      
+      console.log('Invoice saved successfully, checking if user can still create invoices...');
+      // After saving, check if user has reached their limit
+      if (!canCreateInvoice()) {
+        console.log('User has reached limit after saving, redirecting to dashboard');
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 2000); // Give user time to see the success message
+      }
     } catch (error) {
       console.error('Error saving invoice:', error);
       toast({
@@ -151,6 +166,11 @@ const InvoiceCreator = () => {
       setIsGeneratingPDF(false);
     }
   };
+
+  // Don't render the page if user cannot create invoices
+  if (user && !canCreateInvoice()) {
+    return null; // This will prevent the page from rendering while redirect happens
+  }
 
   return (
     <div className="min-h-screen bg-black relative overflow-hidden">
@@ -216,7 +236,6 @@ const InvoiceCreator = () => {
       {/* Main Content */}
       <main className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Side - Form */}
           <div className="space-y-6">
             <Card className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 shadow-2xl">
               <CardHeader>
@@ -228,7 +247,6 @@ const InvoiceCreator = () => {
             </Card>
           </div>
 
-          {/* Right Side - Preview */}
           <div className="lg:sticky lg:top-8">
             <Card className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 shadow-2xl">
               <CardHeader>

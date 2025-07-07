@@ -141,12 +141,21 @@ export const useSubscription = () => {
   };
 
   const canCreateInvoice = () => {
+    console.log('Checking if user can create invoice:', {
+      tier: subscription.subscription_tier,
+      count: subscription.invoice_count,
+      limit: subscription.invoice_limit
+    });
+    
     if (subscription.subscription_tier === 'Unlimited') return true;
     return subscription.invoice_count < subscription.invoice_limit;
   };
 
   const checkInvoiceLimit = () => {
-    if (!canCreateInvoice()) {
+    const canCreate = canCreateInvoice();
+    console.log('Invoice limit check result:', canCreate);
+    
+    if (!canCreate) {
       const upgradeMessage = subscription.subscription_tier === 'Free' 
         ? "Sie haben das Limit von 3 Rechnungen für den kostenlosen Plan erreicht. Upgraden Sie auf Pro für 20 Rechnungen pro Monat."
         : "Sie haben das Limit von 20 Rechnungen für den Pro-Plan erreicht. Upgraden Sie auf Unlimited für unbegrenzte Rechnungen.";
@@ -156,9 +165,9 @@ export const useSubscription = () => {
         description: upgradeMessage,
         variant: "destructive"
       });
-      return false;
     }
-    return true;
+    
+    return canCreate;
   };
 
   useEffect(() => {
