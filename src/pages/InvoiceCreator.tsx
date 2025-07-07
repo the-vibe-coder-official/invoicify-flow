@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -17,7 +16,7 @@ const InvoiceCreator = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { checkInvoiceLimit, checkSubscription, canCreateInvoice } = useSubscription();
+  const { checkInvoiceLimit, checkSubscription, canCreateInvoice, incrementInvoiceCount } = useSubscription();
   const previewRef = useRef<HTMLDivElement>(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -60,11 +59,17 @@ const InvoiceCreator = () => {
       return;
     }
 
-    // IMPORTANT: Check invoice limit before saving and prevent saving if limit reached
+    // CRITICAL: Double-check invoice limit before saving
     console.log('Checking invoice limit before saving...');
-    if (!checkInvoiceLimit()) {
+    if (!canCreateInvoice()) {
       console.log('Invoice limit reached, preventing save');
-      return; // Exit early if limit is reached
+      toast({
+        title: "Rechnungslimit erreicht",
+        description: "Sie haben Ihr monatliches Limit erreicht. Bitte upgraden Sie Ihren Plan.",
+        variant: "destructive"
+      });
+      navigate('/subscription');
+      return;
     }
 
     if (!invoice.customerName.trim()) {
@@ -92,8 +97,8 @@ const InvoiceCreator = () => {
       
       setInvoice(prev => ({ ...prev, id: invoiceId }));
       
-      // Refresh subscription data to update invoice count
-      await checkSubscription();
+      // Immediately increment the local count to prevent race conditions
+      incrementInvoiceCount();
       
       toast({
         title: "Invoice saved",
@@ -101,13 +106,22 @@ const InvoiceCreator = () => {
       });
       
       console.log('Invoice saved successfully, checking if user can still create invoices...');
-      // After saving, check if user has reached their limit
-      if (!canCreateInvoice()) {
-        console.log('User has reached limit after saving, redirecting to dashboard');
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 2000); // Give user time to see the success message
-      }
+      
+      // After incrementing, check if user has now reached their limit
+      setTimeout(() => {
+        if (!canCreateInvoice()) {
+          console.log('User has reached limit after saving, redirecting to dashboard');
+          toast({
+            title: "Limit erreicht",
+            description: "Sie haben Ihr monatliches Limit erreicht. Zurück zum Dashboard...",
+            variant: "destructive"
+          });
+          setTimeout(() => {
+            navigate('/dashboard');
+          }, 1500);
+        }
+      }, 100); // Small delay to ensure state is updated
+      
     } catch (error) {
       console.error('Error saving invoice:', error);
       toast({
@@ -203,8 +217,8 @@ const InvoiceCreator = () => {
                 variant="outline" 
                 size="sm" 
                 onClick={handleSave}
-                disabled={isSaving}
-                className="bg-gray-800/50 border-gray-600/50 text-white hover:bg-gray-700/50"
+                disabled={isSaving || !canCreateInvoice()}
+                className="bg-gray-800/50 border-gray-600/50 text-white hover:bg-gray-700/50 disabled:opacity-50"
               >
                 <Save className="h-4 w-4 mr-2" />
                 {isSaving ? 'Saving...' : 'Save'}

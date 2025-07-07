@@ -170,6 +170,14 @@ export const useSubscription = () => {
     return canCreate;
   };
 
+  // Function to increment invoice count locally after successful save
+  const incrementInvoiceCount = () => {
+    setSubscription(prev => ({
+      ...prev,
+      invoice_count: prev.invoice_count + 1
+    }));
+  };
+
   useEffect(() => {
     if (user && session) {
       checkSubscription();
@@ -185,6 +193,7 @@ export const useSubscription = () => {
     createCheckoutSession,
     openCustomerPortal,
     canCreateInvoice,
-    checkInvoiceLimit
+    checkInvoiceLimit,
+    incrementInvoiceCount
   };
 };
