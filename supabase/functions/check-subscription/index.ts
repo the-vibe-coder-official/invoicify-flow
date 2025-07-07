@@ -65,11 +65,34 @@ serve(async (req) => {
     
     if (customers.data.length === 0) {
       logStep("No customer found, returning free tier data");
+      
+      // Use service role for database operations
+      const supabaseService = createClient(
+        Deno.env.get("SUPABASE_URL") ?? "",
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+        { auth: { persistSession: false } }
+      );
+
+      // Get current invoice count from database for the current month
+      const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      const { data: invoices, error: invoiceError } = await supabaseService
+        .from("invoices")
+        .select("id")
+        .eq("user_id", user.id)
+        .gte("created_at", startOfMonth.toISOString());
+      
+      if (invoiceError) {
+        logStep("Error fetching invoices", { error: invoiceError.message });
+      }
+      
+      const invoiceCount = invoices?.length || 0;
+      logStep("Free tier user invoice count", { invoiceCount });
+
       return new Response(JSON.stringify({ 
         subscribed: false,
         subscription_tier: 'Free',
         invoice_limit: 3,
-        invoice_count: 0
+        invoice_count: invoiceCount
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
@@ -118,11 +141,13 @@ serve(async (req) => {
       { auth: { persistSession: false } }
     );
 
-    // Get current invoice count from database
+    // Get current invoice count from database for the current month
+    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const { data: invoices, error: invoiceError } = await supabaseService
       .from("invoices")
       .select("id")
-      .eq("user_id", user.id);
+      .eq("user_id", user.id)
+      .gte("created_at", startOfMonth.toISOString());
     
     if (invoiceError) {
       logStep("Error fetching invoices", { error: invoiceError.message });

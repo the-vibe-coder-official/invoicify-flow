@@ -1,11 +1,11 @@
-
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Download, Save, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
+import { useSubscription } from '@/hooks/useSubscription';
 import { Invoice } from '@/types/invoice';
 import { InvoiceForm } from '@/components/invoice/InvoiceForm';
 import { InvoicePreview } from '@/components/invoice/InvoicePreview';
@@ -16,6 +16,7 @@ const InvoiceCreator = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { checkInvoiceLimit, checkSubscription } = useSubscription();
   const previewRef = useRef<HTMLDivElement>(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -36,6 +37,16 @@ const InvoiceCreator = () => {
     template: 'modern'
   });
 
+  // Check invoice limits on component mount
+  useEffect(() => {
+    if (user) {
+      if (!checkInvoiceLimit()) {
+        // If user has reached limit, redirect them back to dashboard
+        navigate('/dashboard');
+      }
+    }
+  }, [user, checkInvoiceLimit, navigate]);
+
   const handleSave = async () => {
     if (!user) {
       toast({
@@ -43,6 +54,11 @@ const InvoiceCreator = () => {
         description: "Please log in to save invoices.",
         variant: "destructive"
       });
+      return;
+    }
+
+    // Check invoice limit before saving
+    if (!checkInvoiceLimit()) {
       return;
     }
 
@@ -69,6 +85,9 @@ const InvoiceCreator = () => {
       const invoiceId = await saveInvoiceToDatabase(invoice, user.id);
       
       setInvoice(prev => ({ ...prev, id: invoiceId }));
+      
+      // Refresh subscription data to update invoice count
+      await checkSubscription();
       
       toast({
         title: "Invoice saved",

@@ -145,6 +145,22 @@ export const useSubscription = () => {
     return subscription.invoice_count < subscription.invoice_limit;
   };
 
+  const checkInvoiceLimit = () => {
+    if (!canCreateInvoice()) {
+      const upgradeMessage = subscription.subscription_tier === 'Free' 
+        ? "Sie haben das Limit von 3 Rechnungen für den kostenlosen Plan erreicht. Upgraden Sie auf Pro für 20 Rechnungen pro Monat."
+        : "Sie haben das Limit von 20 Rechnungen für den Pro-Plan erreicht. Upgraden Sie auf Unlimited für unbegrenzte Rechnungen.";
+      
+      toast({
+        title: "Rechnungslimit erreicht",
+        description: upgradeMessage,
+        variant: "destructive"
+      });
+      return false;
+    }
+    return true;
+  };
+
   useEffect(() => {
     if (user && session) {
       checkSubscription();
@@ -159,6 +175,7 @@ export const useSubscription = () => {
     checkSubscription,
     createCheckoutSession,
     openCustomerPortal,
-    canCreateInvoice
+    canCreateInvoice,
+    checkInvoiceLimit
   };
 };
