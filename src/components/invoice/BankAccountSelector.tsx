@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -150,14 +151,14 @@ export const BankAccountSelector = ({ selectedBankAccountId, onBankAccountSelect
           <div>
             <Label htmlFor="bankAccountSelect">Select Bank Account</Label>
             <Select
-              value={selectedBankAccountId || ''}
-              onValueChange={(value) => onBankAccountSelect(value || undefined)}
+              value={selectedBankAccountId || 'none'}
+              onValueChange={(value) => onBankAccountSelect(value === 'none' ? undefined : value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a bank account" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">No bank account</SelectItem>
+                <SelectItem value="none">No bank account</SelectItem>
                 {bankAccounts.map((account) => (
                   <SelectItem key={account.id} value={account.id!}>
                     {account.accountName} ({account.accountType.toUpperCase()})
