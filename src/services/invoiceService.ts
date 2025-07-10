@@ -3,7 +3,43 @@ import { Invoice } from '@/types/invoice';
 
 export const saveInvoiceToDatabase = async (invoice: Invoice, userId: string): Promise<string> => {
   try {
-    // Insert invoice
+    // CRITICAL: First check subscription limit in the database to prevent race conditions
+    const { data: currentSubscription, error: subError } = await supabase
+      .from('subscribers')
+      .select('invoice_count, invoice_limit')
+      .eq('user_id', userId)
+      .single();
+
+    if (subError) {
+      console.error('Error fetching subscription:', subError);
+      throw new Error('Could not verify subscription limits');
+    }
+
+    // CRITICAL: Enforce the limit strictly at the database level
+    if (currentSubscription.invoice_count >= currentSubscription.invoice_limit) {
+      console.error('Invoice limit exceeded:', {
+        current: currentSubscription.invoice_count,
+        limit: currentSubscription.invoice_limit
+      });
+      throw new Error('Monthly invoice limit reached. Please upgrade your plan to create more invoices.');
+    }
+
+    // CRITICAL: Atomically increment counter BEFORE inserting invoice to prevent race conditions
+    const { error: incrementError } = await supabase
+      .from('subscribers')
+      .update({ 
+        invoice_count: currentSubscription.invoice_count + 1,
+        updated_at: new Date().toISOString()
+      })
+      .eq('user_id', userId)
+      .eq('invoice_count', currentSubscription.invoice_count); // This ensures no race condition
+
+    if (incrementError) {
+      console.error('Error incrementing invoice count:', incrementError);
+      throw new Error('Could not update invoice count');
+    }
+
+    // Now insert the invoice
     const { data: invoiceData, error: invoiceError } = await supabase
       .from('invoices')
       .insert({
@@ -26,7 +62,18 @@ export const saveInvoiceToDatabase = async (invoice: Invoice, userId: string): P
       .select('id')
       .single();
 
-    if (invoiceError) throw invoiceError;
+    if (invoiceError) {
+      // CRITICAL: If invoice insertion fails, rollback the counter increment
+      await supabase
+        .from('subscribers')
+        .update({ 
+          invoice_count: currentSubscription.invoice_count,
+          updated_at: new Date().toISOString()
+        })
+        .eq('user_id', userId);
+      
+      throw invoiceError;
+    }
 
     const invoiceId = invoiceData.id;
 

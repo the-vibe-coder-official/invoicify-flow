@@ -110,8 +110,8 @@ const InvoiceCreator = () => {
       
       setInvoice(prev => ({ ...prev, id: invoiceId }));
       
-      // Immediately increment the local count to prevent race conditions
-      incrementInvoiceCount();
+      // Refresh subscription data after successful save to get updated count
+      await checkSubscription();
       
       toast({
         title: "Invoice saved",
