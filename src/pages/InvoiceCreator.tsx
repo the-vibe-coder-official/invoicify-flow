@@ -16,7 +16,7 @@ const InvoiceCreator = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const { checkInvoiceLimit, checkSubscription, canCreateInvoice, incrementInvoiceCount } = useSubscription();
+  const { checkInvoiceLimit, checkSubscription, canCreateInvoice, incrementInvoiceCount, loading } = useSubscription();
   const previewRef = useRef<HTMLDivElement>(null);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -37,17 +37,26 @@ const InvoiceCreator = () => {
     template: 'modern'
   });
 
-  // Check invoice limits on component mount
+  // Check invoice limits on component mount and when subscription changes
   useEffect(() => {
     if (user) {
-      console.log('Checking invoice limit on mount...');
-      if (!canCreateInvoice()) {
-        console.log('User cannot create invoice, redirecting to dashboard');
-        // If user has reached limit, redirect them back to dashboard
-        navigate('/dashboard');
+      console.log('Checking invoice limit - current state:', {
+        canCreate: canCreateInvoice(),
+        loading: loading
+      });
+      
+      // Only redirect if not loading and cannot create invoice
+      if (!loading && !canCreateInvoice()) {
+        console.log('User cannot create invoice, redirecting to subscription page');
+        toast({
+          title: "Rechnungslimit erreicht",
+          description: "Sie haben Ihr monatliches Limit erreicht. Bitte upgraden Sie Ihren Plan.",
+          variant: "destructive"
+        });
+        navigate('/subscription');
       }
     }
-  }, [user, canCreateInvoice, navigate]);
+  }, [user, canCreateInvoice, navigate, loading, toast]);
 
   const handleSave = async () => {
     if (!user) {

@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -140,7 +140,7 @@ export const useSubscription = () => {
     }
   };
 
-  const canCreateInvoice = () => {
+  const canCreateInvoice = useCallback(() => {
     console.log('Checking if user can create invoice:', {
       tier: subscription.subscription_tier,
       count: subscription.invoice_count,
@@ -149,7 +149,7 @@ export const useSubscription = () => {
     
     if (subscription.subscription_tier === 'Unlimited') return true;
     return subscription.invoice_count < subscription.invoice_limit;
-  };
+  }, [subscription.subscription_tier, subscription.invoice_count, subscription.invoice_limit]);
 
   const checkInvoiceLimit = () => {
     const canCreate = canCreateInvoice();
