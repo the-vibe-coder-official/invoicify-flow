@@ -68,6 +68,10 @@ const InvoiceCreator = () => {
       return;
     }
 
+    // CRITICAL: Always refresh subscription data before checking limit
+    console.log('Refreshing subscription data before saving...');
+    await checkSubscription();
+    
     // CRITICAL: Double-check invoice limit before saving
     console.log('Checking invoice limit before saving...');
     if (!canCreateInvoice()) {
