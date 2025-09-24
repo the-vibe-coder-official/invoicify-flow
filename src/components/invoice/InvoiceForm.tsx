@@ -1,21 +1,82 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, AlertTriangle } from 'lucide-react';
 import { Invoice, InvoiceItem, InvoiceTemplate } from '@/types/invoice';
 import { TemplateSelector } from './TemplateSelector';
 import { LogoUpload } from './LogoUpload';
 import { BankAccountSelector } from './BankAccountSelector';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { sanitizeString } from '@/lib/validation';
+import { ZodError } from 'zod';
 
 interface InvoiceFormProps {
   invoice: Invoice;
   onInvoiceChange: (invoice: Invoice) => void;
+  validationErrors?: Record<string, string>;
 }
 
-export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
+export const InvoiceForm = ({ invoice, onInvoiceChange, validationErrors }: InvoiceFormProps) => {
+  const [inputErrors, setInputErrors] = useState<Record<string, string>>({});
+
+  const validateInput = useCallback((field: string, value: any): string | null => {
+    try {
+      switch (field) {
+        case 'invoiceNumber':
+          if (!value || value.trim().length === 0) return 'Invoice number is required';
+          if (value.length > 50) return 'Invoice number must be less than 50 characters';
+          if (!/^[A-Za-z0-9\-_]+$/.test(value)) return 'Invoice number can only contain letters, numbers, hyphens, and underscores';
+          break;
+        case 'customerName':
+          if (!value || value.trim().length === 0) return 'Customer name is required';
+          if (value.length > 200) return 'Customer name must be less than 200 characters';
+          break;
+        case 'customerEmail':
+          if (value && value.length > 0) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) return 'Invalid email address';
+            if (value.length > 255) return 'Email must be less than 255 characters';
+          }
+          break;
+        case 'description':
+          if (!value || value.trim().length === 0) return 'Description is required';
+          if (value.length > 500) return 'Description must be less than 500 characters';
+          break;
+        case 'quantity':
+          if (value <= 0) return 'Quantity must be greater than 0';
+          if (value > 9999999) return 'Quantity is too large';
+          break;
+        case 'price':
+          if (value < 0) return 'Price cannot be negative';
+          if (value > 999999999) return 'Price is too large';
+          break;
+      }
+      return null;
+    } catch {
+      return 'Invalid input';
+    }
+  }, []);
+
+  const handleInputChange = useCallback((field: string, value: any, index?: number) => {
+    // Validate input
+    const error = validateInput(field, value);
+    const errorKey = index !== undefined ? `${field}_${index}` : field;
+    
+    setInputErrors(prev => ({
+      ...prev,
+      [errorKey]: error || ''
+    }));
+
+    // Sanitize string inputs
+    if (typeof value === 'string') {
+      value = sanitizeString(value);
+    }
+
+    return error;
+  }, [validateInput]);
   const updateInvoice = (updates: Partial<Invoice>) => {
     const updatedInvoice = { ...invoice, ...updates };
     
@@ -74,6 +135,24 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Display validation errors */}
+      {(validationErrors || Object.keys(inputErrors).some(key => inputErrors[key])) && (
+        <Alert variant="destructive">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            Please fix the following errors:
+            <ul className="mt-2 ml-4 list-disc">
+              {Object.entries(validationErrors || {}).map(([field, error]) => (
+                <li key={field}>{error}</li>
+              ))}
+              {Object.entries(inputErrors).filter(([, error]) => error).map(([field, error]) => (
+                <li key={field}>{error}</li>
+              ))}
+            </ul>
+          </AlertDescription>
+        </Alert>
+      )}
+
       <TemplateSelector 
         selectedTemplate={invoice.template || 'modern'} 
         onTemplateChange={handleTemplateChange} 
@@ -90,9 +169,16 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
               <Input
                 id="invoiceNumber"
                 value={invoice.invoiceNumber}
-                onChange={(e) => updateInvoice({ invoiceNumber: e.target.value })}
+                onChange={(e) => {
+                  const error = handleInputChange('invoiceNumber', e.target.value);
+                  if (!error) updateInvoice({ invoiceNumber: e.target.value });
+                }}
                 placeholder="INV-001"
+                className={inputErrors.invoiceNumber ? 'border-destructive' : ''}
               />
+              {inputErrors.invoiceNumber && (
+                <p className="text-sm text-destructive mt-1">{inputErrors.invoiceNumber}</p>
+              )}
             </div>
             <div>
               <Label htmlFor="date">Invoice Date</Label>
@@ -137,9 +223,16 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
             <Input
               id="customerName"
               value={invoice.customerName}
-              onChange={(e) => updateInvoice({ customerName: e.target.value })}
+              onChange={(e) => {
+                const error = handleInputChange('customerName', e.target.value);
+                if (!error) updateInvoice({ customerName: e.target.value });
+              }}
               placeholder="John Doe"
+              className={inputErrors.customerName ? 'border-destructive' : ''}
             />
+            {inputErrors.customerName && (
+              <p className="text-sm text-destructive mt-1">{inputErrors.customerName}</p>
+            )}
           </div>
           <div>
             <Label htmlFor="customerEmail">Email</Label>
@@ -147,9 +240,16 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
               id="customerEmail"
               type="email"
               value={invoice.customerEmail}
-              onChange={(e) => updateInvoice({ customerEmail: e.target.value })}
+              onChange={(e) => {
+                const error = handleInputChange('customerEmail', e.target.value);
+                if (!error) updateInvoice({ customerEmail: e.target.value });
+              }}
               placeholder="john@example.com"
+              className={inputErrors.customerEmail ? 'border-destructive' : ''}
             />
+            {inputErrors.customerEmail && (
+              <p className="text-sm text-destructive mt-1">{inputErrors.customerEmail}</p>
+            )}
           </div>
           <div>
             <Label htmlFor="customerAddress">Address</Label>
@@ -182,29 +282,52 @@ export const InvoiceForm = ({ invoice, onInvoiceChange }: InvoiceFormProps) => {
                   <Label>Description</Label>
                   <Input
                     value={item.description}
-                    onChange={(e) => updateItem(index, { description: e.target.value })}
+                    onChange={(e) => {
+                      const error = handleInputChange('description', e.target.value, index);
+                      if (!error) updateItem(index, { description: e.target.value });
+                    }}
                     placeholder="Service description"
+                    className={inputErrors[`description_${index}`] ? 'border-destructive' : ''}
                   />
+                  {inputErrors[`description_${index}`] && (
+                    <p className="text-xs text-destructive mt-1">{inputErrors[`description_${index}`]}</p>
+                  )}
                 </div>
                 <div className="col-span-2">
                   <Label>Quantity</Label>
                   <Input
                     type="number"
                     value={item.quantity}
-                    onChange={(e) => updateItem(index, { quantity: Number(e.target.value) })}
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
+                      const error = handleInputChange('quantity', value, index);
+                      if (!error) updateItem(index, { quantity: value });
+                    }}
                     min="0"
                     step="0.01"
+                    className={inputErrors[`quantity_${index}`] ? 'border-destructive' : ''}
                   />
+                  {inputErrors[`quantity_${index}`] && (
+                    <p className="text-xs text-destructive mt-1">{inputErrors[`quantity_${index}`]}</p>
+                  )}
                 </div>
                 <div className="col-span-2">
                   <Label>Price ($)</Label>
                   <Input
                     type="number"
                     value={item.price}
-                    onChange={(e) => updateItem(index, { price: Number(e.target.value) })}
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
+                      const error = handleInputChange('price', value, index);
+                      if (!error) updateItem(index, { price: value });
+                    }}
                     min="0"
                     step="0.01"
+                    className={inputErrors[`price_${index}`] ? 'border-destructive' : ''}
                   />
+                  {inputErrors[`price_${index}`] && (
+                    <p className="text-xs text-destructive mt-1">{inputErrors[`price_${index}`]}</p>
+                  )}
                 </div>
                 <div className="col-span-2">
                   <Label>Total ($)</Label>

@@ -1,8 +1,20 @@
 import { supabase } from '@/integrations/supabase/client';
 import { Invoice } from '@/types/invoice';
+import { validateInvoiceData, sanitizeInvoiceData } from '@/lib/validation';
+import { SecurityService } from './securityService';
 
 export const saveInvoiceToDatabase = async (invoice: Invoice, userId: string): Promise<string> => {
   try {
+    // SECURITY: Validate and sanitize input data
+    const validatedInvoice = validateInvoiceData(invoice);
+    const sanitizedInvoice = sanitizeInvoiceData(validatedInvoice);
+    
+    // SECURITY: Pre-validate subscription limits
+    const limitCheck = await SecurityService.validateInvoiceLimit(userId);
+    if (!limitCheck.allowed) {
+      throw new Error(limitCheck.reason || 'Invoice creation not allowed');
+    }
+
     // CRITICAL: First check subscription limit in the database to prevent race conditions
     const { data: currentSubscription, error: subError } = await supabase
       .from('subscribers')
@@ -39,25 +51,25 @@ export const saveInvoiceToDatabase = async (invoice: Invoice, userId: string): P
       throw new Error('Could not update invoice count');
     }
 
-    // Now insert the invoice
+    // Now insert the invoice with sanitized data
     const { data: invoiceData, error: invoiceError } = await supabase
       .from('invoices')
       .insert({
         user_id: userId,
-        invoice_number: invoice.invoiceNumber,
-        date: invoice.date,
-        due_date: invoice.dueDate,
-        customer_name: invoice.customerName,
-        customer_email: invoice.customerEmail,
-        customer_address: invoice.customerAddress,
-        customer_logo_url: invoice.customerLogoUrl,
-        subtotal: invoice.subtotal,
-        tax_rate: invoice.taxRate,
-        tax_amount: invoice.taxAmount,
-        total: invoice.total,
+        invoice_number: sanitizedInvoice.invoiceNumber,
+        date: sanitizedInvoice.date,
+        due_date: sanitizedInvoice.dueDate,
+        customer_name: sanitizedInvoice.customerName,
+        customer_email: sanitizedInvoice.customerEmail,
+        customer_address: sanitizedInvoice.customerAddress,
+        customer_logo_url: sanitizedInvoice.customerLogoUrl,
+        subtotal: sanitizedInvoice.subtotal,
+        tax_rate: sanitizedInvoice.taxRate,
+        tax_amount: sanitizedInvoice.taxAmount,
+        total: sanitizedInvoice.total,
         status: 'draft',
-        notes: invoice.notes,
-        bank_account_id: invoice.bankAccountId
+        notes: sanitizedInvoice.notes,
+        bank_account_id: sanitizedInvoice.bankAccountId
       })
       .select('id')
       .single();
@@ -77,9 +89,9 @@ export const saveInvoiceToDatabase = async (invoice: Invoice, userId: string): P
 
     const invoiceId = invoiceData.id;
 
-    // Insert invoice items
-    if (invoice.items.length > 0) {
-      const invoiceItems = invoice.items.map(item => ({
+    // Insert invoice items with sanitized data
+    if (sanitizedInvoice.items.length > 0) {
+      const invoiceItems = sanitizedInvoice.items.map(item => ({
         invoice_id: invoiceId,
         description: item.description,
         quantity: item.quantity,
@@ -94,9 +106,34 @@ export const saveInvoiceToDatabase = async (invoice: Invoice, userId: string): P
       if (itemsError) throw itemsError;
     }
 
+    // SECURITY: Log successful invoice creation
+    await SecurityService.logSecurityEvent(userId, {
+      eventType: 'invoice_created',
+      eventData: { 
+        invoiceId, 
+        invoiceNumber: sanitizedInvoice.invoiceNumber,
+        total: sanitizedInvoice.total
+      }
+    });
+
     return invoiceId;
   } catch (error) {
     console.error('Error saving invoice:', error);
+    
+    // SECURITY: Log failed invoice creation attempts
+    await SecurityService.logSecurityEvent(userId, {
+      eventType: 'suspicious_activity',
+      eventData: { 
+        action: 'invoice_creation_failed',
+        error: error instanceof Error ? error.message : String(error)
+      }
+    });
+    
+    // Return user-friendly error message while hiding internal details
+    if (error instanceof Error && error.message.includes('Monthly invoice limit')) {
+      throw error; // Re-throw limit errors as-is
+    }
+    
     throw new Error('Could not save invoice to database');
   }
 };
